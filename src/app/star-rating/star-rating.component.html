@@ -1,0 +1,5 @@
+<span class="flex flex-row justify-start">
+    <span *ngFor="let star of starsArray; let i = index" class="text-yellow-700 text-xl">
+        {{ i < currentWalk.rating ? '★' : '☆' }}
+      </span>
+</span>

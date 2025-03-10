@@ -7,6 +7,11 @@ export const walksObject = [
     rating: 4,
     startPoint: 'startPoint',
     hillType: 'Munro',
+    image: 'lochnagar.jpeg',
+    duration: '6 - 7 hours',
+    bogFactor: 2,
+    distance: 11.75,
+    completed: false
   },
   {
     id: 2,
@@ -15,7 +20,12 @@ export const walksObject = [
     difficulty: 4,
     rating: 4,
     startPoint: 'startPoint',
-    hillType: 'Munro, Munro'
+    hillType: 'Munro, Munro',
+    image: 'narnain_and_ime.jpeg',
+    duration: '6 - 7 hours',
+    bogFactor: 3,
+    distance: 8.5,
+    completed: false
   },
   {
     id: 3,
@@ -24,7 +34,12 @@ export const walksObject = [
     difficulty: 5,
     rating: 4,
     startPoint: 'startPoint',
-    hillType: 'Munro, Munro'
+    hillType: 'Munro, Munro',
+    image: 'an_tellach.jpeg',
+    duration: '9 - 10 hours',
+    bogFactor: 3,
+    distance: 12.5,
+    completed: false
   },
   {
     id: 4,
@@ -33,7 +48,12 @@ export const walksObject = [
     difficulty: 4,
     rating: 4,
     startPoint: 'startPoint',
-    hillType: 'type'
+    hillType: 'type',
+    image: 'ben_macdui.jpg',
+    duration: '6 - 8 hours',
+    bogFactor: 3,
+    distance: 11,
+    completed: false
   },
   {
     id: 5,
@@ -43,7 +63,11 @@ export const walksObject = [
     rating: 5,
     startPoint: 'startPoint',
     hillType: 'Munro',
-    image : 'ben_lomond.jpg'
+    image: 'ben_lomond.jpg',
+    duration: '4.5 - 5.5 hours',
+    bogFactor: 3,
+    distance: 7.5,
+    completed: false
   },
   {
     id: 6,
@@ -54,6 +78,37 @@ export const walksObject = [
     startPoint: 'startPoint',
     hillType: 'type',
     image: 'fiacaill_ridge.jpeg',
-    duration: '5 - 6 hours'
+    duration: '5 - 6 hours',
+    bogFactor: 2,
+    distance: 6.25,
+    completed: false
+  },
+  {
+    id: 7,
+    name: 'Mayar and Driesh',
+    location: 'Glen Clova',
+    difficulty: 3,
+    rating: 4,
+    startPoint: 'Glen Doll car park',
+    hillType: 'Munro, Munro',
+    image: 'mayar_and_driesh.jpeg',
+    duration: '4.5 - 5.5 hours',
+    bogFactor: 3,
+    distance: 9,
+    completed: false
+  },
+  {
+    id: 8,
+    name: 'Oxen Craig',
+    location: 'Bennachie',
+    difficulty: 2,
+    rating: 5,
+    startPoint: 'Bennachie car park',
+    hillType: 'Sub 2000',
+    image: 'bennachie.jpg',
+    duration: '2.5 - 4 hours',
+    bogFactor: 1,
+    distance: 5.5,
+    completed: false
   }
 ];

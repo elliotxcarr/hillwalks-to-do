@@ -1,41 +1,43 @@
-<div class="grid h-screen grid-cols-2">
+<div class="grid grid-cols-2">
     
-    <div class="flex w-full justify-center bg-gray-400 h-screen">
-        <ul class="w-4/5">
-            <div class="pt-3">
-                <div>
-                    <h1 class="text-xl font-semibold">Sort by:</h1>
-                </div>
-                <div class="flex flex-row justify-around">
-                    <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200 ">
-                        <button class="hover:cursor-pointer" (click)="sortRating()">Rating</button>
-                    </div>
-                    <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200 ">
-                        <button class="hover:cursor-pointer" (click)="sortLevel()">Level</button>
-                    </div>
-                </div>
-                
+    <div class="flex w-full justify-center h-screen bg-gray-400 flex-col items-center"  >
+        <div class="py-3 w-1/2">
+            <div>
+                <h1 class="text-xl font-semibold my-2">Sort by:</h1>
             </div>
-            <li *ngFor="let walk of walksObj" class="py-2 bg-gray-300 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 hover:cursor-pointer" (click)="sendWalk(walk)">
-                <div class="flex flex-row justify-between pb-2">
+            <div class="flex flex-row justify-around">
+                <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200  ">
+                    <button class="hover:cursor-pointer" (click)="sortRating()">Rating</button>
+                </div>
+                <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200 ">
+                    <button class="hover:cursor-pointer" (click)="sortLevel()">Level</button>
+                </div>
+                <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200 ">
+                    <button class="hover:cursor-pointer" (click)="sortCompleted()">Completed</button>
+                </div>
+                <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200 ">
+                    <button class="hover:cursor-pointer" (click)="sortToDo()">To Do</button>
+                </div>
+            </div>
+            
+        </div>
+        <ul class="w-4/5 overflow-y-scroll no-scrollbar">
+            <li *ngFor="let walk of walksObj" 
+                class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer" 
+                [ngClass]="{'bg-gray-300': !walk.completed, 'bg-green-300 hover:bg-green-200': walk.completed}" 
+                (click)="sendWalk(walk)">
+                <div class="flex justify-between pb-2">
                     <h1 class="font-semibold text-2xl">{{ walk.name }}</h1>
                     <h1 class="font-semibold text-2xl">{{ walk.location }}</h1>
                 </div>
-                <div class="flex justify-center items-center">
-                    <div class="flex flex-row w-full justify-between items-center">
-                        <span class="flex flex-row justify-start">
-                            <span *ngFor="let star of starsArray; let i = index" class="text-yellow-700 text-xl">
-                                {{ i < walk.rating ? '★' : '☆' }}
-                              </span>
-                        </span>
-                        <span class="flex flex-row items-center ">
-                            <h1>Level </h1>
-                            <h1 class="{{getDifficultyColour(walk.difficulty)}} font-medium text-lg" >&nbsp;{{ walk.difficulty }}</h1>
-                        </span>
-
-
-                       
-                    </div>
+                <div class="flex justify-between items-center">
+                    <app-star-rating [currentWalk]="walk"></app-star-rating>
+                    <span class="flex items-center">
+                        <h1>Level </h1>
+                        <h1 class="font-medium text-lg" [ngClass]="getDifficultyColour(walk.difficulty)">
+                            &nbsp;{{ walk.difficulty }}
+                        </h1>
+                    </span>
                 </div>
             </li>
         </ul>

@@ -1,51 +1,47 @@
 import { NgClass, NgFor } from '@angular/common';
-import { Component, Input, Output,EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { walksObject } from '../walksObject';
 import { DetailsPanelComponent } from '../details-panel/details-panel.component';
+import { StarRatingComponent } from '../star-rating/star-rating.component';
 
 @Component({
   selector: 'app-item-list',
-  imports: [NgFor, DetailsPanelComponent],
+  standalone: true,
+  imports: [NgFor, DetailsPanelComponent, StarRatingComponent, NgClass],
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.scss'
 })
 export class ItemListComponent {
-  selectedWalk:any ;
-  
-  sendWalk = (walk:any) =>{
+  selectedWalk: any;
+  walksObj = [...walksObject]; 
+
+  sendWalk(walk: any) {
     this.selectedWalk = walk;
-    console.log(this.selectedWalk)
-  }
-  
-  walksObj = walksObject
-
-  colour = '';
-
-  getDifficultyColour = (difficulty:number)=>{
-    switch(difficulty){
-      case 1:
-        this.colour = 'text-green-700'
-        break;
-      case 2:
-        this.colour = 'text-green-700'
-        break;
-      case 3:
-        this.colour = 'text-orange-700'
-        break;
-      case 4:
-        this.colour = 'text-red-700'
-        break;
-      case 5:
-        this.colour = 'text-red-700'
-    }
-    return this.colour
   }
 
-  sortRating = ()=>{
-    this.walksObj  = walksObject.sort((a,b)=>b.rating - a.rating)
+  getDifficultyColour(difficulty: number): string {
+    return {
+      1: 'text-green-700',
+      2: 'text-green-700',
+      3: 'text-orange-700',
+      4: 'text-red-700',
+      5: 'text-red-700'
+    }[difficulty] || '';
   }
-  sortLevel = ()=>{
-    this.walksObj = walksObject.sort((a,b)=> b.difficulty - a.difficulty)
+
+  sortRating() {
+    this.walksObj = [...walksObject].sort((a, b) => b.rating - a.rating);
   }
-  starsArray = Array(5)
+
+  sortLevel() {
+    this.walksObj = [...walksObject].sort((a, b) => b.difficulty - a.difficulty);
+  }
+
+  sortCompleted() {
+    this.walksObj = [...walksObject].sort((a, b) => Number(b.completed) - Number(a.completed));
+  }
+
+  sortToDo() {
+    this.walksObj = [...walksObject].sort((a, b) => Number(a.completed) - Number(b.completed));
+  }
 }
