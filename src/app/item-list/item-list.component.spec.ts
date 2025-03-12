@@ -20,4 +20,15 @@ describe('ItemListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('Testing getDifficultyColour',()=>{
+    it('returns text-green-700 when difficulty = 2', ()=>{
+      let difficulty = 2;
+      expect(component.getDifficultyColour(difficulty)).toBe('text-green-700')
+    });
+    it('returns an empty string when difficulty does not match criteria',()=>{
+      let difficulty  = 9;
+      expect(component.getDifficultyColour(difficulty)).toBe('')
+    });
+  });
 });

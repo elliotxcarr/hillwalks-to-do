@@ -110,5 +110,19 @@ export const walksObject = [
     bogFactor: 1,
     distance: 5.5,
     completed: false
-  }
+  },
+  {
+    id: 9,
+    name: 'Beinn Alligin',
+    location: 'Torridon',
+    difficulty: 5,
+    rating: 5,
+    startPoint: 'Coire Mhic Nobuil Car Park',
+    hillType: 'Munro, Munro',
+    image: 'beinn_alligin.jpeg',
+    duration: '7 - 8 hours',
+    bogFactor: 3,
+    distance: 6.5,
+    completed: false
+  },
 ];

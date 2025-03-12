@@ -1,19 +1,35 @@
-import { NgClass, NgFor } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { walksObject } from '../walksObject';
+import { NgClass, NgFor, NgIf } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { DetailsPanelComponent } from '../details-panel/details-panel.component';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 
 @Component({
   selector: 'app-item-list',
   standalone: true,
-  imports: [NgFor, DetailsPanelComponent, StarRatingComponent, NgClass],
+  imports: [NgFor, DetailsPanelComponent, StarRatingComponent, NgClass,NgIf],
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.scss'
 })
-export class ItemListComponent {
+export class ItemListComponent implements OnInit {
   selectedWalk: any;
-  walksObj = [...walksObject]; 
+  walkData: any[] = [];
+  loading: boolean = true;
+
+  constructor(){}
+
+  ngOnInit(): void {
+      this.getWalks();
+  }
+  
+  getWalks (){
+    this.loading = true;
+    fetch("http://localhost:5001/walks")
+    .then(res => res.json())
+    .then(data => this.walkData = data)
+    .catch(error=> console.error(error))
+    .finally(()=> this.loading = false)
+  }
+ 
 
   sendWalk(walk: any) {
     this.selectedWalk = walk;
@@ -30,18 +46,18 @@ export class ItemListComponent {
   }
 
   sortRating() {
-    this.walksObj = [...walksObject].sort((a, b) => b.rating - a.rating);
+    this.walkData = [...this.walkData].sort((a, b) => b.rating - a.rating);
   }
 
   sortLevel() {
-    this.walksObj = [...walksObject].sort((a, b) => b.difficulty - a.difficulty);
+    this.walkData = [...this.walkData].sort((a, b) => b.difficulty - a.difficulty);
   }
 
   sortCompleted() {
-    this.walksObj = [...walksObject].sort((a, b) => Number(b.completed) - Number(a.completed));
+    this.walkData = [...this.walkData].sort((a, b) => Number(b.completed) - Number(a.completed));
   }
 
   sortToDo() {
-    this.walksObj = [...walksObject].sort((a, b) => Number(a.completed) - Number(b.completed));
+    this.walkData = [...this.walkData].sort((a, b) => Number(a.completed) - Number(b.completed));
   }
 }

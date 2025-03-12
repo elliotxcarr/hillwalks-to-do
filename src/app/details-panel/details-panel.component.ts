@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, Input, input } from '@angular/core';
+import { Component, Input, } from '@angular/core';
 
 @Component({
   selector: 'app-details-panel',
@@ -9,19 +9,10 @@ import { Component, Input, input } from '@angular/core';
 })
 export class DetailsPanelComponent {
   @Input() walk: any;
-  
+  imageLoading: boolean = false;
+
   clearSelection = ()=>{
      this.walk = null
-     console.log('cleared')
   }
 
-  setWalkComplete = ()=>{
-    if(!this.walk.completed){
-      this.walk = [...this.walk.completed, true]
-      console.log('walk completed')
-    }
-    else if(this.walk.completed){
-      console.info('walk is already completed')
-    }
-  }
 }
