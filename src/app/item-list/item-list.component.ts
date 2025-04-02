@@ -2,13 +2,14 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { DetailsPanelComponent } from '../details-panel/details-panel.component';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-item-list',
   standalone: true,
   imports: [NgFor, DetailsPanelComponent, StarRatingComponent, NgClass,NgIf],
   templateUrl: './item-list.component.html',
-  styleUrl: './item-list.component.scss'
+  styleUrl: './item-list.component.css'
 })
 export class ItemListComponent implements OnInit {
   selectedWalk: any;
@@ -30,6 +31,9 @@ export class ItemListComponent implements OnInit {
     .finally(()=> this.loading = false)
   }
  
+  clearSelection(){
+    this.selectedWalk = null;
+  }
 
   sendWalk(walk: any) {
     this.selectedWalk = walk;

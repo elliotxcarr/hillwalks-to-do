@@ -1,0 +1,14 @@
+<div class="flex justify-center items-center h-screen w-auto bg-gray-200">
+        <form (ngSubmit)="onSubmit()" class=" flex flex-col w-1/4 bg-gray-300" autocomplete="off">
+            <div id="inputContainer">
+                <label for="username" class="text-2xl">Username:</label>
+                <input type="text" id="username" [(ngModel)]="enteredUsername" name="username" data-lpignore="true" required>
+            </div>
+            
+            <div id="inputContainer">
+                <label for="password" class="text-2xl">Password:</label>
+                <input type="password" id="password" [(ngModel)]="eneteredPassword" name="password" data-lpignore="true" required>
+            </div>
+            <button type="submit" class="bg-gray-400 text-2xl p-2 hover:bg-gray-500 hover:cursor-pointer">Login</button>
+          </form>
+</div>  

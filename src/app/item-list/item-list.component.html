@@ -1,5 +1,5 @@
-<div class="grid grid-cols-2">
-    <div *ngIf="loading" class="flex justify-center items-center bg-gray-400">
+<div [ngClass]="{'grid grid-cols-2': selectedWalk}" class="flex w-full">
+    <div *ngIf="loading" class="flex justify-center items-center bg-gray-400 w-full h-screen">
         <div  class="spinner">
         </div>
     </div>
@@ -47,5 +47,5 @@
             </li>
         </ul>
     </div>
-    <app-details-panel [walk]="selectedWalk" ></app-details-panel>
+    <app-details-panel [walk]="selectedWalk" *ngIf="selectedWalk" (close)="clearSelection()"></app-details-panel>
 </div>  

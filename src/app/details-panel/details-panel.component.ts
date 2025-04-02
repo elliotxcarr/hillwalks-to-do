@@ -1,18 +1,21 @@
 import { NgIf } from '@angular/common';
-import { Component, Input, } from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-details-panel',
   imports: [NgIf],
   templateUrl: './details-panel.component.html',
-  styleUrl: './details-panel.component.scss'
+  styleUrl: './details-panel.component.css'
 })
 export class DetailsPanelComponent {
   @Input() walk: any;
+  @Output() close = new EventEmitter<void>();
+
   imageLoading: boolean = false;
 
-  clearSelection = ()=>{
-     this.walk = null
+  closeComponent = ()=>{
+     this.close.emit();
   }
+
 
 }
