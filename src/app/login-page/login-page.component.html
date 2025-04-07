@@ -2,12 +2,15 @@
         <form (ngSubmit)="onSubmit()" class=" flex flex-col w-1/4 bg-gray-300" autocomplete="off">
             <div id="inputContainer">
                 <label for="username" class="text-2xl">Username:</label>
-                <input type="text" id="username" [(ngModel)]="enteredUsername" name="username" data-lpignore="true" required>
+                <input type="text" (click)="errorMessage=''" id="username" [(ngModel)]="enteredUsername" name="username" data-lpignore="true" required [ngClass]="{'border-2 border-red-500': this.errorMessage != ''}">
             </div>
             
             <div id="inputContainer">
                 <label for="password" class="text-2xl">Password:</label>
-                <input type="password" id="password" [(ngModel)]="eneteredPassword" name="password" data-lpignore="true" required>
+                <input type="password" (click)="errorMessage=''" id="password" [(ngModel)]="enteredPassword" name="password" data-lpignore="true" required [ngClass]="{'border-2 border-red-500':this.errorMessage != ''}">
+            </div>
+            <div id="errorMessageContainer" *ngIf="errorMessage" class="flex px-4">
+                <p class="text-lg text-red-500">{{errorMessage}}</p>
             </div>
             <button type="submit" class="bg-gray-400 text-2xl p-2 hover:bg-gray-500 hover:cursor-pointer">Login</button>
           </form>

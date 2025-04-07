@@ -1,8 +1,12 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { DetailsPanelComponent } from '../details-panel/details-panel.component';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { RouterOutlet } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { User } from '../models/User';
+import { selectUser } from '../state/app.selectors';
 
 @Component({
   selector: 'app-item-list',
@@ -15,11 +19,14 @@ export class ItemListComponent implements OnInit {
   selectedWalk: any;
   walkData: any[] = [];
   loading: boolean = true;
+  private readonly store:Store = inject(Store)
 
-  constructor(){}
+
+  
 
   ngOnInit(): void {
       this.getWalks();
+      
   }
   
   getWalks (){

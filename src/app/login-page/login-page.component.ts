@@ -1,47 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import '@angular/forms'
 import { FormsModule } from '@angular/forms';
+import { select, Store } from '@ngrx/store';
+import { loginRequest } from '../state/app.actions';
+import { AuthState } from '../state/app.reducer';
+import { NgClass, NgIf } from '@angular/common';
+import { selectErrorMessage } from '../state/app.selectors';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ FormsModule],
+  imports: [ FormsModule, NgIf, NgClass],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
 export class LoginPageComponent implements OnInit{
 
-  constructor (private router:Router){};
-
-  enteredUsername: string = '';
-  eneteredPassword: string = '';
-  users: User[] = [];
+  private readonly router = inject(Router)
+  private readonly store = inject(Store<AuthState>)
   
+  errorMessage: string | null = '';
+  enteredUsername: string = '';
+  enteredPassword: string = '';
+  errorState: Observable<string | null> = this.store.select(selectErrorMessage);
+
   ngOnInit(): void {
-      fetch('http://localhost:5001/users')
-      .then(res => res.json())
-      .then(data => this.users = data)
-      
-      .catch(error => console.error(error))
-  }
+
+  } 
   
   onSubmit(){
-    //let userFound = this.findUser();
-    //if(userFound){
-      this.router.navigate(['home']);
-    //}
-    //else{
-      //alert('Incorrect username or password')
-    //}
+    let username = this.enteredUsername;
+    let password = this.enteredPassword;
+    
+    if(username == '' || password == ''){
+      this.errorMessage = 'Username and Password are required'
+    }
+    else{
+      this.store.dispatch(loginRequest({username, password}));
+      this.errorState.subscribe(error => this.errorMessage = error)
+    }
   }
 
-  findUser():object | null{
-    return this.users.find(user => user.username === this.enteredUsername && user.password === this.eneteredPassword) || null;
-  }
 }
 
-interface User{
-  username: string;
-  password: string;
-  name: string;
-}

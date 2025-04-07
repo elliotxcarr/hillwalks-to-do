@@ -1,10 +1,8 @@
-<div [ngClass]="{'grid grid-cols-2': selectedWalk}" class="flex w-full">
-    <div *ngIf="loading" class="flex justify-center items-center bg-gray-400 w-full h-screen">
-        <div  class="spinner">
-        </div>
-    </div>
+<div [ngClass]="{'grid grid-cols-2': selectedWalk}" class="flex w-full bg-gray-400 h-screen">
     
-    <div class="flex w-full justify-center h-screen bg-gray-400 flex-col items-center" *ngIf="!loading" >
+
+    <div class="flex w-full justify-center h-screen bg-gray-400 flex-col items-center "  >
+        
         <div class="py-3 w-1/2">
             <div>
                 <h1 class="text-xl font-semibold my-2">Sort by:</h1>
@@ -25,7 +23,12 @@
             </div>
             
         </div>
-        <ul class="w-4/5 overflow-y-scroll no-scrollbar">
+
+        <div *ngIf="loading" class="flex justify-center items-center h-full w-full">
+            <div  class="spinner">
+            </div>
+        </div>
+        <ul class="w-4/5 overflow-y-scroll no-scrollbar pb-15" *ngIf="!loading">
             
             <li *ngFor="let walk of walkData" 
                 class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer" 

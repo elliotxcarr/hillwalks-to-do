@@ -1,9 +1,9 @@
 @reference "tailwindcss";
 
 input{
-    @apply bg-gray-400 w-2/4 rounded-md p-1 
+    @apply bg-gray-400 w-2/4 rounded-md p-1 ;
 }
 
 #inputContainer{
-    @apply flex flex-row p-4 justify-between w-full
+    @apply flex flex-row p-4 justify-between w-full;
 }
