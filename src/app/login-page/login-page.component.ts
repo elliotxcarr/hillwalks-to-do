@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import '@angular/forms'
 import { FormsModule } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { loginRequest } from '../state/app.actions';
-import { AuthState } from '../state/app.reducer';
+import { loginRequest } from '../state/authState/auth.actions';
+import { AuthState } from '../state/authState/auth.reducer';
 import { NgClass, NgIf } from '@angular/common';
-import { selectErrorMessage } from '../state/app.selectors';
+import { selectErrorMessage } from '../state/authState/auth.selectors';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -17,7 +17,6 @@ import { Observable } from 'rxjs';
 })
 export class LoginPageComponent implements OnInit{
 
-  private readonly router = inject(Router)
   private readonly store = inject(Store<AuthState>)
   
   errorMessage: string | null = '';
@@ -38,7 +37,10 @@ export class LoginPageComponent implements OnInit{
     }
     else{
       this.store.dispatch(loginRequest({username, password}));
-      this.errorState.subscribe(error => this.errorMessage = error)
+      
+        this.errorState.subscribe(error => this.errorMessage = error)
+        console.log(this.errorMessage)
+      
     }
   }
 
