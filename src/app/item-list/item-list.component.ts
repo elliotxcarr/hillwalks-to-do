@@ -1,45 +1,96 @@
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DetailsPanelComponent } from '../details-panel/details-panel.component';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { Store } from '@ngrx/store';
+import { SpinnerComponent } from '../shared/spinner/spinner.component';
+import { Walk } from '../models/Walk';
+import { catchError, combineLatest, filter, from, map, Observable, of, shareReplay, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { User } from '../models/User';
+import { UserService } from '../services/user.service';
+import { WalkService } from '../services/walk.service';
+import { addCompleteWalk } from '../state/userState/user.actions';
+import { getCompletedWalks } from '../state/userState/user.selectors';
 
 @Component({
   selector: 'app-item-list',
   standalone: true,
-  imports: [NgFor, DetailsPanelComponent, StarRatingComponent, NgClass,NgIf],
+  imports: [DetailsPanelComponent, StarRatingComponent, NgClass,NgIf, SpinnerComponent, AsyncPipe, NgFor],
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.css'
 })
 export class ItemListComponent implements OnInit {
-  selectedWalk: any;
-  walkData: any[] = [];
-  loading: boolean = true;
-  private readonly store:Store = inject(Store)
+  selectedWalk: Walk | null = null;
+  walkData: Walk[] = [];
+  contentLoaded: boolean = false;
+  userCompletedWalks: Walk[]= [];
+  walksToDisplay$!: Observable<Walk[]>;
+  private walkService = inject(WalkService)
+  private userService = inject(UserService)
+  private store = inject(Store)
+  loggedInUser!: User;
+  private destroy$ = new Subject<void>();
+  compWalksSelector$: Observable<Walk[]> = this.store.select(getCompletedWalks)
+  compWalksFromState: Walk[] =[];
+
+  ngOnInit() {
+    this.contentLoaded = false;
+    this.userService.loggedInUser$
+    .pipe(
+      filter(user => !!user && !!user._id), 
+      takeUntil(this.destroy$),
+      tap(user => {
+        this.loggedInUser = user
+        this.refreshWalks();
+      })
+    ).subscribe()
+    
+  }
 
 
-  
+  // I need to store walks and completed walks in the current state so that a fetch isnt being done every time i hit complete
+  refreshWalks() {
+    if (!this.loggedInUser?._id) return;
 
-  ngOnInit(): void {
-      this.getWalks();
-      
+    //This is grabbing the completed walks from the user state
+    //The initial state seemed to be starting off with completed walks as []
+    this.compWalksSelector$.subscribe(walks => this.compWalksFromState = walks);
+    combineLatest([
+      this.walkService.getAllWalks(),
+      this.compWalksSelector$
+    ]).pipe(
+      map(([walks, completedWalks]) => {
+        return walks.map(walk => ({
+          ...walk,
+          completed: !!completedWalks.find(cw => cw.name === walk.name)
+        }));
+      }),
+      take(1)
+    ).subscribe(walks => {
+      this.walksToDisplay$ = of(walks);
+      this.contentLoaded = true;
+    });
   }
   
-  getWalks (){
-    this.loading = true;
-    fetch("http://localhost:5001/walks")
-    .then(res => res.json())
-    .then(data => this.walkData = data)
-    .catch(error=> console.error(error))
-    .finally(()=> this.loading = false)
-  }
- 
   clearSelection(){
     this.selectedWalk = null;
   }
 
-  sendWalk(walk: any) {
+  sendWalk(walk: Walk) {
     this.selectedWalk = walk;
+  }
+
+  handleWalkComplete(walk: Walk){
+    this.store.dispatch(addCompleteWalk({walk: {...walk, completed: true}}))
+    
+    this.walkService.saveCompletedWalk(this.loggedInUser._id!, walk).subscribe({
+      next: ()=> {
+        this.refreshWalks()
+      },
+      error: (err) =>{
+        console.error('Failed to complete walk', err)
+      }
+    })
   }
 
   getDifficultyColour(difficulty: number): string {

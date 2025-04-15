@@ -24,13 +24,12 @@
             
         </div>
 
-        <div *ngIf="loading" class="flex justify-center items-center h-full w-full">
-            <div  class="spinner">
-            </div>
+        <div *ngIf="!contentLoaded" class="flex justify-center items-center h-full w-full">
+            <app-spinner [contentLoaded]="contentLoaded"></app-spinner>
         </div>
-        <ul class="w-4/5 overflow-y-scroll no-scrollbar pb-15" *ngIf="!loading">
+        <ul class="w-4/5 overflow-y-scroll no-scrollbar pb-15" *ngIf="walksToDisplay$ | async as walks">
             
-            <li *ngFor="let walk of walkData" 
+            <li *ngFor="let walk of walks"
                 class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer" 
                 [ngClass]="{'bg-gray-300': !walk.completed, 'bg-green-300 hover:bg-green-200': walk.completed}" 
                 (click)="sendWalk(walk)">
@@ -50,5 +49,5 @@
             </li>
         </ul>
     </div>
-    <app-details-panel [walk]="selectedWalk" *ngIf="selectedWalk" (close)="clearSelection()"></app-details-panel>
+    <app-details-panel [selectedWalk]="selectedWalk" *ngIf="selectedWalk" (close)="clearSelection()" (sendComplete)="handleWalkComplete($event)"></app-details-panel>
 </div>  

@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 export class LoginPageComponent implements OnInit{
 
   private readonly store = inject(Store<AuthState>)
+  private readonly router = inject(Router)
   
   errorMessage: string | null = '';
   enteredUsername: string = '';
@@ -33,13 +34,13 @@ export class LoginPageComponent implements OnInit{
     let password = this.enteredPassword;
     
     if(username == '' || password == ''){
-      this.errorMessage = 'Username and Password are required'
+     this.errorMessage = 'Username and Password are required'
     }
     else{
       this.store.dispatch(loginRequest({username, password}));
       
-        this.errorState.subscribe(error => this.errorMessage = error)
-        console.log(this.errorMessage)
+      this.errorState.subscribe(error => this.errorMessage = error)
+      console.log(this.errorMessage)
       
     }
   }

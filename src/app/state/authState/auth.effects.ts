@@ -5,6 +5,8 @@ import * as UserActions from '../userState/user.actions'
 import { catchError, exhaustMap, map, of, tap } from 'rxjs'
 import { inject, Injectable } from '@angular/core'
 import { User } from '../../models/User'
+import { Router } from '@angular/router'
+
 
 
 @Injectable()
@@ -12,15 +14,16 @@ export class AuthEffects{
     
     private actions$:Actions = inject(Actions) 
     private authService: AuthService = inject(AuthService)
-    
+    private router:Router = inject(Router)
+
     loginRequest = createEffect(()=>
         this.actions$.pipe(
             ofType(AuthActions.loginRequest),
             exhaustMap((action) =>
             this.authService
                 .login(action.username, action.password).pipe(
-                    tap((user: User | null)=> console.log(user)),
-                    map((user: User | null) =>
+                    tap(()=> this.router.navigate(['home']) ),
+                    map((user: User) =>
                         UserActions.initialiseUser({user})
                     ),
                     catchError((error) => {

@@ -1,23 +1,25 @@
 import { createReducer, on } from "@ngrx/store";
 import { Walk } from "../../models/Walk";
-import { initialiseUser } from "./user.actions";
+import { addCompleteWalk, initialiseUser, setCompletedWalks } from "./user.actions";
 
 export interface UserState{
-    id: string | null | undefined;
-    username: string | null| undefined;
-    name: string | null| undefined;
-    age: number | null| undefined;
-    email: string | null| undefined;
-    completedWalks: Walk[] | null| undefined;
+    _id?: string;
+    username?: string;
+    password?: string;
+    name?: string;
+    age?: number;
+    email?: string;
+    completedWalks: Walk[];
 }
 
 export const initialUserState: UserState = {
-    id: null,
-    username: null,
-    name: null,
-    age: null,
-    email: null,
-    completedWalks: null
+    _id: '',
+    username: '',
+    password: '',
+    name: '',
+    age: 0,
+    email: '',
+    completedWalks: []
 }
 
 export const userReducer = createReducer(
@@ -25,11 +27,22 @@ export const userReducer = createReducer(
 
     on(initialiseUser, (state, {user})=>({
         ...state,
-        id: user?.id,
+        _id: user?._id,
         username: user?.username,
+        password: user?.password,
         name: user?.name,
         age: user?.age,
         email: user?.email,
-        completedWalks: user?.completedWalks
+        completedWalks: user?.completedWalks ?? []
+    })),
+
+    on(addCompleteWalk, (state, {walk})=>({
+        ...state,
+        completedWalks: [...state.completedWalks, walk]
+    })),
+
+    on(setCompletedWalks, (state, {completedWalks}) => ({
+        ...state,
+        completedWalks
     }))
 )

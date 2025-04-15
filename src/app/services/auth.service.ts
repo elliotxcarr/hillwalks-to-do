@@ -14,13 +14,10 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
-  login(username: string, password:string): Observable<User | null>{
+  login(username: string, password:string): Observable<User>{
     const credentials = {username, password};
     console.log('at login')
-    return this.http.post<User | null>(this.usersApi, credentials).pipe(
-      tap(()=> this.router.navigate(['home'])),
-      
-    )
+    return this.http.post<User>(this.usersApi, credentials)
   }
 
   logout(): void{
