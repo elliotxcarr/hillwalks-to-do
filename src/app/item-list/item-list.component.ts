@@ -34,13 +34,15 @@ export class ItemListComponent implements OnInit {
   compWalksFromState: Walk[] =[];
 
   ngOnInit() {
+    
     this.contentLoaded = false;
     this.userService.loggedInUser$
     .pipe(
       filter(user => !!user && !!user._id), 
       takeUntil(this.destroy$),
       tap(user => {
-        this.loggedInUser = user
+        this.loggedInUser = user;
+        
         this.refreshWalks();
       })
     ).subscribe()
@@ -50,19 +52,23 @@ export class ItemListComponent implements OnInit {
 
   // I need to store walks and completed walks in the current state so that a fetch isnt being done every time i hit complete
   refreshWalks() {
+
+
+
     if (!this.loggedInUser?._id) return;
 
+    
     //This is grabbing the completed walks from the user state
     //The initial state seemed to be starting off with completed walks as []
-    this.compWalksSelector$.subscribe(walks => this.compWalksFromState = walks);
+    
     combineLatest([
       this.walkService.getAllWalks(),
-      this.compWalksSelector$
+      this.store.select(getCompletedWalks)
     ]).pipe(
-      map(([walks, completedWalks]) => {
+      map(([walks, completed_walks]) => {
         return walks.map(walk => ({
           ...walk,
-          completed: !!completedWalks.find(cw => cw.name === walk.name)
+          completed: !!completed_walks?.find(cw => cw.name === walk.name)
         }));
       }),
       take(1)
@@ -70,6 +76,9 @@ export class ItemListComponent implements OnInit {
       this.walksToDisplay$ = of(walks);
       this.contentLoaded = true;
     });
+
+    this.compWalksSelector$.subscribe(walks => this.compWalksFromState = walks)
+    console.log(this.compWalksFromState)
   }
   
   clearSelection(){
@@ -86,6 +95,7 @@ export class ItemListComponent implements OnInit {
     this.walkService.saveCompletedWalk(this.loggedInUser._id!, walk).subscribe({
       next: ()=> {
         this.refreshWalks()
+        console.log("in walk service")
       },
       error: (err) =>{
         console.error('Failed to complete walk', err)

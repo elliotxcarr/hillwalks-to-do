@@ -5,7 +5,6 @@ import { catchError, EMPTY,exhaustMap,map,switchMap, tap, withLatestFrom } from 
 import { Store } from "@ngrx/store";
 import { selectUserId } from "./user.selectors";
 import { WalkService } from "../../services/walk.service";
-import { UserService } from "../../services/user.service";
 
 @Injectable()
 export class UserEffects{
@@ -28,22 +27,11 @@ export class UserEffects{
     //   ), {dispatch: false}
     // );
 
-    refreshCompletedWalks$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(UserActions.addCompleteWalk),
-        withLatestFrom(this.store.select(selectUserId)),
-        switchMap(([_, userId]) =>
-          this.walkService.getCompletedWalks(userId!).pipe(
-            map(completedWalks =>
-              UserActions.setCompletedWalks({ completedWalks })
-            ),
-            catchError(err => {
-              console.error('Error fetching completed walks:', err);
-              return EMPTY;
-            })
-          )
-        )
-      )
-    );
-    
+    logUser = createEffect(()=>
+        this.actions$.pipe(
+            ofType(UserActions.initialiseUser),
+           tap(({user})=> console.log(user))
+            
+        ), {dispatch: false}
+    )
 }

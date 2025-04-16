@@ -9,7 +9,7 @@ export interface UserState{
     name?: string;
     age?: number;
     email?: string;
-    completedWalks: Walk[];
+    completed_walks: Walk[];
 }
 
 export const initialUserState: UserState = {
@@ -19,7 +19,7 @@ export const initialUserState: UserState = {
     name: '',
     age: 0,
     email: '',
-    completedWalks: []
+    completed_walks: []
 }
 
 export const userReducer = createReducer(
@@ -33,12 +33,12 @@ export const userReducer = createReducer(
         name: user?.name,
         age: user?.age,
         email: user?.email,
-        completedWalks: user?.completedWalks ?? []
+        completed_walks: user?.completed_walks
     })),
 
     on(addCompleteWalk, (state, {walk})=>({
         ...state,
-        completedWalks: [...state.completedWalks, walk]
+        completed_walks: [...state.completed_walks, walk]
     })),
 
     on(setCompletedWalks, (state, {completedWalks}) => ({

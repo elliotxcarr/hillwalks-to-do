@@ -20,16 +20,17 @@ export class WalkService {
         )
     }
 
-    getCompletedWalks(userId:string){
-        return this.http.get<Walk[]>(`http://localhost:5001/users/${userId}/completed_walks`).pipe(
-            catchError(err => {
-                console.error(err);
-                return of([]);
-            }),
-        )
-    }
+    // getCompletedWalks(userId:string){
+    //     return this.http.get<Walk[]>(`http://localhost:5001/users/${userId}/completed_walks`).pipe(
+    //         catchError(err => {
+    //             console.error(err);
+    //             return of([]);
+    //         }),
+    //     )
+    // }
     
     saveCompletedWalk(userId: string, walk: Walk){
+        console.log("in save completed walk")
         return this.http.post<Walk[]>(
             `http://localhost:5001/users/${userId}/completed_walks`,
             {walk}

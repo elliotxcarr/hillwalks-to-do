@@ -7,5 +7,5 @@ import { Walk } from "./Walk";
     name: string ;
     age: number ;
     email:string;
-    completedWalks: Walk[] ;
+    completed_walks: Walk[] ;
 }

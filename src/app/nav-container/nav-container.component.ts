@@ -22,12 +22,16 @@ export class NavContainerComponent implements OnInit{
   private userService = inject(UserService)
   user!: User;
   private destroy$ = new Subject<void>();
-
+  
   ngOnInit() {
     this.userService.loggedInUser$
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => {
         this.user = user;
+      });
+
+      this.user.completed_walks.forEach(element => {
+        console.log(element)
       });
   }
 

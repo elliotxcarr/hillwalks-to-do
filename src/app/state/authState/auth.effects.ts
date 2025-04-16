@@ -24,8 +24,10 @@ export class AuthEffects{
                 .login(action.username, action.password).pipe(
                     tap(()=> this.router.navigate(['home']) ),
                     map((user: User) =>
+                    
                         UserActions.initialiseUser({user})
                     ),
+                    
                     catchError((error) => {
                         const errorMsg = error.error?.error;
                         return of(AuthActions.loginFailure({ error: errorMsg }));
