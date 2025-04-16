@@ -1,8 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject} from '@angular/core';
 import '@angular/forms'
 import { FormsModule } from '@angular/forms';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { loginRequest } from '../state/authState/auth.actions';
 import { AuthState } from '../state/authState/auth.reducer';
 import { NgClass, NgIf } from '@angular/common';
@@ -15,19 +14,14 @@ import { Observable } from 'rxjs';
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
-export class LoginPageComponent implements OnInit{
+export class LoginPageComponent{
 
   private readonly store = inject(Store<AuthState>)
-  private readonly router = inject(Router)
   
   errorMessage: string | null = '';
   enteredUsername: string = '';
   enteredPassword: string = '';
   errorState: Observable<string | null> = this.store.select(selectErrorMessage);
-
-  ngOnInit(): void {
-
-  } 
   
   onSubmit(){
     let username = this.enteredUsername;
@@ -40,10 +34,7 @@ export class LoginPageComponent implements OnInit{
       this.store.dispatch(loginRequest({username, password}));
       
       this.errorState.subscribe(error => this.errorMessage = error)
-      console.log(this.errorMessage)
-      
     }
   }
-
 }
 

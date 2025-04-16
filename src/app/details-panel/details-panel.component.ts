@@ -1,11 +1,8 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, inject} from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { SpinnerComponent } from '../shared/spinner/spinner.component';
 import { NgIf } from '@angular/common';
 import { Walk } from '../models/Walk';
-import { FormsModule, NgModel } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { addCompleteWalk } from '../state/userState/user.actions';
-import { WalkService } from '../services/walk.service';
+import { FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-details-panel',
@@ -28,28 +25,18 @@ export class DetailsPanelComponent {
   @Output() refresh = new EventEmitter<void>();
   @Output() sendComplete = new EventEmitter<Walk>();
 
-  private store = inject(Store);
-  private walkService = inject(WalkService);
-
   imageLoaded: boolean = false;
 
-  
-  
   closeComponent = ()=>{
      this.close.emit();
   }
 
   walkComplete(walk:Walk){
-    console.log(walk)
     if(walk){
       this.sendComplete.emit(walk)
     }
     else{
       console.error('No walk selected')
     }
-    
   }
-
-
-
 }

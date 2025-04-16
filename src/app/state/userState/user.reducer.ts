@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { Walk } from "../../models/Walk";
-import { addCompleteWalk, initialiseUser, setCompletedWalks } from "./user.actions";
+import { addCompleteWalk, initialiseUser, logOutUser, setCompletedWalks } from "./user.actions";
 
 export interface UserState{
     _id?: string;
@@ -44,5 +44,7 @@ export const userReducer = createReducer(
     on(setCompletedWalks, (state, {completedWalks}) => ({
         ...state,
         completedWalks
-    }))
+    })),
+
+    on(logOutUser, () => initialUserState)
 )

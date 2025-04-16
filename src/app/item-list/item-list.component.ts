@@ -20,21 +20,21 @@ import { getCompletedWalks } from '../state/userState/user.selectors';
   styleUrl: './item-list.component.css'
 })
 export class ItemListComponent implements OnInit {
-  selectedWalk: Walk | null = null;
-  walkData: Walk[] = [];
-  contentLoaded: boolean = false;
-  userCompletedWalks: Walk[]= [];
-  walksToDisplay$!: Observable<Walk[]>;
+  
   private walkService = inject(WalkService)
   private userService = inject(UserService)
   private store = inject(Store)
+
+  selectedWalk: Walk | null = null;
+  contentLoaded: boolean = false;
+  walksToDisplay$!: Observable<Walk[]>;
   loggedInUser!: User;
   private destroy$ = new Subject<void>();
-  compWalksSelector$: Observable<Walk[]> = this.store.select(getCompletedWalks)
-  compWalksFromState: Walk[] =[];
+  sortOptions: string[] = [
+    'Rating','Level','Completed', 'Todo', 
+  ]
 
   ngOnInit() {
-    
     this.contentLoaded = false;
     this.userService.loggedInUser$
     .pipe(
@@ -42,7 +42,6 @@ export class ItemListComponent implements OnInit {
       takeUntil(this.destroy$),
       tap(user => {
         this.loggedInUser = user;
-        
         this.refreshWalks();
       })
     ).subscribe()
@@ -52,6 +51,7 @@ export class ItemListComponent implements OnInit {
     if (!this.loggedInUser?._id) return;
     
     combineLatest([
+      //set a walk state to retrieve the walks at the start
       this.walkService.getAllWalks(),
       this.store.select(getCompletedWalks)
     ]).pipe(
@@ -99,36 +99,22 @@ export class ItemListComponent implements OnInit {
     }[difficulty] || '';
   }
 
-  sortRating() {
+  handleSortButton(option: string){
     this.walksToDisplay$ = this.walksToDisplay$.pipe(
-      map(walks =>
-        [...walks].sort((a, b) => b.rating - a.rating)
-      )
-    )
-  }
-
-  sortLevel() {
-    this.walksToDisplay$ = this.walksToDisplay$.pipe(
-      map(walks =>
-        [...walks].sort((a, b) => b.difficulty - a.difficulty)
-      )
-    )
-  }
-
-  sortCompleted() {
-    this.walksToDisplay$ = this.walksToDisplay$.pipe(
-      map(walks =>
-        [...walks].sort((a, b) => Number(b.completed) - Number(a.completed))
-      )
-    )
-    this.walkData = [...this.walkData].sort((a, b) => Number(b.completed) - Number(a.completed));
-  }
-
-  sortToDo() {
-    this.walksToDisplay$ = this.walksToDisplay$.pipe(
-      map(walks =>
-        [...walks].sort((a, b) => Number(a.completed) - Number(b.completed))
-      )
-    )
+      map(walks =>{
+        switch (option){
+          case 'rating':
+            return [...walks].sort((a, b) => b.rating - a.rating);
+          case 'level':
+            return [...walks].sort((a, b) => b.difficulty - a.difficulty);
+          case 'completed':
+            return [...walks].sort((a, b) => Number(b.completed) - Number(a.completed));
+          case 'todo':
+            return [...walks].sort((a, b) => Number(a.completed) - Number(b.completed));
+          default:
+            return walks
+        }
+      })
+    ) 
   }
 }

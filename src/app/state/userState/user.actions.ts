@@ -17,3 +17,6 @@ export const setCompletedWalks = createAction(
     props<{completedWalks: Walk[]}>()
 )
 
+export const logOutUser = createAction(
+    '[User] Log out user'
+)
