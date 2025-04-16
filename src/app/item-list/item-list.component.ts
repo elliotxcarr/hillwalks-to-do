@@ -46,20 +46,10 @@ export class ItemListComponent implements OnInit {
         this.refreshWalks();
       })
     ).subscribe()
-    
   }
 
-
-  // I need to store walks and completed walks in the current state so that a fetch isnt being done every time i hit complete
   refreshWalks() {
-
-
-
     if (!this.loggedInUser?._id) return;
-
-    
-    //This is grabbing the completed walks from the user state
-    //The initial state seemed to be starting off with completed walks as []
     
     combineLatest([
       this.walkService.getAllWalks(),
@@ -76,9 +66,6 @@ export class ItemListComponent implements OnInit {
       this.walksToDisplay$ = of(walks);
       this.contentLoaded = true;
     });
-
-    this.compWalksSelector$.subscribe(walks => this.compWalksFromState = walks)
-    console.log(this.compWalksFromState)
   }
   
   clearSelection(){
@@ -95,7 +82,6 @@ export class ItemListComponent implements OnInit {
     this.walkService.saveCompletedWalk(this.loggedInUser._id!, walk).subscribe({
       next: ()=> {
         this.refreshWalks()
-        console.log("in walk service")
       },
       error: (err) =>{
         console.error('Failed to complete walk', err)
@@ -114,18 +100,35 @@ export class ItemListComponent implements OnInit {
   }
 
   sortRating() {
-    this.walkData = [...this.walkData].sort((a, b) => b.rating - a.rating);
+    this.walksToDisplay$ = this.walksToDisplay$.pipe(
+      map(walks =>
+        [...walks].sort((a, b) => b.rating - a.rating)
+      )
+    )
   }
 
   sortLevel() {
-    this.walkData = [...this.walkData].sort((a, b) => b.difficulty - a.difficulty);
+    this.walksToDisplay$ = this.walksToDisplay$.pipe(
+      map(walks =>
+        [...walks].sort((a, b) => b.difficulty - a.difficulty)
+      )
+    )
   }
 
   sortCompleted() {
+    this.walksToDisplay$ = this.walksToDisplay$.pipe(
+      map(walks =>
+        [...walks].sort((a, b) => Number(b.completed) - Number(a.completed))
+      )
+    )
     this.walkData = [...this.walkData].sort((a, b) => Number(b.completed) - Number(a.completed));
   }
 
   sortToDo() {
-    this.walkData = [...this.walkData].sort((a, b) => Number(a.completed) - Number(b.completed));
+    this.walksToDisplay$ = this.walksToDisplay$.pipe(
+      map(walks =>
+        [...walks].sort((a, b) => Number(a.completed) - Number(b.completed))
+      )
+    )
   }
 }
