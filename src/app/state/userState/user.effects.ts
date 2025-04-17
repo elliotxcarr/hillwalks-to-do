@@ -13,11 +13,9 @@ export class UserEffects{
         
         this.actions$.pipe(
             ofType(logOutUser),
-            tap(()=>console.log('user log out effect')),
             tap(()=>
-                
                 AuthActions.logOut()
             )
-        )
+        ), {dispatch: false}
     )
 }
