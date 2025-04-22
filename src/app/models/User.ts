@@ -8,4 +8,5 @@ import { Walk } from "./Walk";
     age: number ;
     email:string;
     completed_walks: Walk[] ;
+    walks: Walk[];
 }

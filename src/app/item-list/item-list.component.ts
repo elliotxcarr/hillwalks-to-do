@@ -5,12 +5,12 @@ import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { Store } from '@ngrx/store';
 import { SpinnerComponent } from '../shared/spinner/spinner.component';
 import { Walk } from '../models/Walk';
-import { catchError, combineLatest, filter, from, map, Observable, of, shareReplay, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { combineLatest, filter, map, Observable, of, Subject, take, takeUntil, tap } from 'rxjs';
 import { User } from '../models/User';
 import { UserService } from '../services/user.service';
 import { WalkService } from '../services/walk.service';
-import { addCompleteWalk } from '../state/userState/user.actions';
-import { getCompletedWalks } from '../state/userState/user.selectors';
+import { addCompleteWalk, setWalks } from '../state/userState/user.actions';
+import { getCompletedWalks, selectWalks } from '../state/userState/user.selectors';
 
 @Component({
   selector: 'app-item-list',
@@ -25,11 +25,14 @@ export class ItemListComponent implements OnInit {
   private userService = inject(UserService)
   private store = inject(Store)
 
+  initialWalks = this.store.select(selectWalks);
+  walks:Walk[] = [];
   selectedWalk: Walk | null = null;
-  contentLoaded: boolean = false;
+  
   walksToDisplay$!: Observable<Walk[]>;
   loggedInUser!: User;
   private destroy$ = new Subject<void>();
+  contentLoaded: boolean = false;
   sortOptions: string[] = [
     'Rating','Level','Completed', 'Todo', 
   ]
@@ -49,10 +52,9 @@ export class ItemListComponent implements OnInit {
 
   refreshWalks() {
     if (!this.loggedInUser?._id) return;
-    
+
     combineLatest([
-      //set a walk state to retrieve the walks at the start
-      this.walkService.getAllWalks(),
+      this.store.select(selectWalks),
       this.store.select(getCompletedWalks)
     ]).pipe(
       map(([walks, completed_walks]) => {
@@ -100,6 +102,8 @@ export class ItemListComponent implements OnInit {
   }
 
   handleSortButton(option: string){
+    option = option.toLowerCase()
+    
     this.walksToDisplay$ = this.walksToDisplay$.pipe(
       map(walks =>{
         switch (option){
@@ -114,7 +118,8 @@ export class ItemListComponent implements OnInit {
           default:
             return walks
         }
-      })
-    ) 
+      }),
+      tap(sortedWalks => this.store.dispatch(setWalks({walks: sortedWalks as Walk[]})))
+    )
   }
 }

@@ -12,11 +12,16 @@ export const addCompleteWalk = createAction(
     props<{walk: Walk}>()
 )
 
-export const setCompletedWalks = createAction(
-    '[User] Set Completed Walks',
-    props<{completedWalks: Walk[]}>()
-)
-
 export const logOutUser = createAction(
     '[User] Log out user'
 )
+
+export const getWalks = createAction(
+    '[User] Get walks',
+)
+
+export const setWalks = createAction(
+    '[User] Set Walks',
+    props<{walks: Walk[]}>()
+)
+

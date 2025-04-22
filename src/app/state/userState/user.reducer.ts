@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { Walk } from "../../models/Walk";
-import { addCompleteWalk, initialiseUser, logOutUser, setCompletedWalks } from "./user.actions";
+import { addCompleteWalk, initialiseUser, logOutUser, setWalks } from "./user.actions";
 
 export interface UserState{
     _id?: string;
@@ -10,6 +10,7 @@ export interface UserState{
     age?: number;
     email?: string;
     completed_walks: Walk[];
+    walks: Walk[];
 }
 
 export const initialUserState: UserState = {
@@ -19,7 +20,8 @@ export const initialUserState: UserState = {
     name: '',
     age: 0,
     email: '',
-    completed_walks: []
+    completed_walks: [],
+    walks: []
 }
 
 export const userReducer = createReducer(
@@ -41,10 +43,10 @@ export const userReducer = createReducer(
         completed_walks: [...state.completed_walks, walk]
     })),
 
-    on(setCompletedWalks, (state, {completedWalks}) => ({
+    on(setWalks, (state, {walks})=>({
         ...state,
-        completedWalks
+        walks: walks
     })),
-
+    
     on(logOutUser, () => initialUserState)
 )

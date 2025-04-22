@@ -22,10 +22,11 @@ export class AuthEffects{
             exhaustMap((action) =>
             this.authService
                 .login(action.username, action.password).pipe(
-                    tap(()=> this.router.navigate(['home']) ),
+                    tap(()=> this.router.navigate(['home'])),
                     map((user: User) =>
                     
-                        UserActions.initialiseUser({user})
+                        UserActions.initialiseUser({user}),
+
                     ),
                     
                     catchError((error) => {
