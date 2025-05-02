@@ -25,20 +25,16 @@ export class ItemListComponent implements OnInit {
   private userService = inject(UserService)
   private store = inject(Store)
 
-  initialWalks = this.store.select(selectWalks);
-  walks:Walk[] = [];
   selectedWalk: Walk | null = null;
   
   walksToDisplay$!: Observable<Walk[]>;
   loggedInUser!: User;
   private destroy$ = new Subject<void>();
-  contentLoaded: boolean = false;
   sortOptions: string[] = [
     'Rating','Level','Completed', 'Todo', 
   ]
 
   ngOnInit() {
-    this.contentLoaded = false;
     this.userService.loggedInUser$
     .pipe(
       filter(user => !!user && !!user._id), 
@@ -66,10 +62,9 @@ export class ItemListComponent implements OnInit {
       take(1)
     ).subscribe(walks => {
       this.walksToDisplay$ = of(walks);
-      this.contentLoaded = true;
     });
   }
-  
+
   clearSelection(){
     this.selectedWalk = null;
   }

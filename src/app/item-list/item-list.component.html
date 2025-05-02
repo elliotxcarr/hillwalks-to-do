@@ -1,41 +1,45 @@
-<div [ngClass]="{'grid grid-cols-2': selectedWalk}" class="flex w-full bg-gray-400 h-screen">  
+<div [ngClass]="{'grid grid-cols-2': selectedWalk}">
 
-    <div class="flex w-full justify-center h-screen bg-gray-400 flex-col items-center "  >
-        
+    <div class="flex w-full justify-center h-screen bg-gray-400 flex-col items-center">
         <div class="py-3 w-1/2">
             <div>
                 <h1 class="text-xl font-semibold my-2">Sort by:</h1>
             </div>
-            <div class="flex flex-row justify-around w-full" >
-                <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200" *ngFor="let option of sortOptions">
+            <div class="flex flex-row justify-around w-full">
+                <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200"
+                    *ngFor="let option of sortOptions">
                     <button class="hover:cursor-pointer" (click)="handleSortButton(option)">{{option}}</button>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="!contentLoaded" class="flex justify-center items-center h-full w-full">
-            <app-spinner [contentLoaded]="contentLoaded"></app-spinner>
+        <div *ngIf="walksToDisplay$ | async as walks"
+            class="flex flex-col w-full justify-center h-screen items-center overflow-auto">
+
+            <div *ngIf="walks.length === 0" class="flex justify-center items-center h-full w-full">
+                <app-spinner [contentLoaded]="walks.length !== 0"></app-spinner>
+            </div>
+            <ul class="w-4/5 overflow-y-scroll no-scrollbar pb-15">
+                <li *ngFor="let walk of walks" class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer"
+                    [ngClass]="{'bg-gray-300': !walk.completed, 'bg-green-300 hover:bg-green-200': walk.completed}"
+                    (click)="sendWalk(walk)">
+                    <div class="flex justify-between pb-2">
+                        <h1 class="font-semibold text-2xl">{{ walk.name }}</h1>
+                        <h1 class="font-semibold text-2xl">{{ walk.location }}</h1>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <app-star-rating [currentWalk]="walk"></app-star-rating>
+                        <span class="flex items-center">
+                            <h1>Level </h1>
+                            <h1 class="font-medium text-lg" [ngClass]="getDifficultyColour(walk.difficulty)">
+                                &nbsp;{{ walk.difficulty }}
+                            </h1>
+                        </span>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <ul class="w-4/5 overflow-y-scroll no-scrollbar pb-15" *ngIf="walksToDisplay$ | async as walks">
-            <li *ngFor="let walk of walks"
-                class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer" 
-                [ngClass]="{'bg-gray-300': !walk.completed, 'bg-green-300 hover:bg-green-200': walk.completed}" 
-                (click)="sendWalk(walk)">
-                <div class="flex justify-between pb-2">
-                    <h1 class="font-semibold text-2xl">{{ walk.name }}</h1>
-                    <h1 class="font-semibold text-2xl">{{ walk.location }}</h1>
-                </div>
-                <div class="flex justify-between items-center">
-                    <app-star-rating [currentWalk]="walk"></app-star-rating>
-                    <span class="flex items-center">
-                        <h1>Level </h1>
-                        <h1 class="font-medium text-lg" [ngClass]="getDifficultyColour(walk.difficulty)">
-                            &nbsp;{{ walk.difficulty }}
-                        </h1>
-                    </span>
-                </div>
-            </li>
-        </ul>
     </div>
-    <app-details-panel [selectedWalk]="selectedWalk" *ngIf="selectedWalk" (close)="clearSelection()" (sendComplete)="handleWalkComplete($event)"></app-details-panel>
-</div>  
+    <app-details-panel [selectedWalk]="selectedWalk" *ngIf="selectedWalk" (close)="clearSelection()"
+        (sendComplete)="handleWalkComplete($event)"></app-details-panel>
+</div>

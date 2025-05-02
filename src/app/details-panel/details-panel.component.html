@@ -5,7 +5,7 @@
         
         <img src="{{_selectedWalk.image}}" (load)="imageLoaded = true" [hidden]="!imageLoaded"/>
 
-        <div *ngIf="!imageLoaded">
+        <div *ngIf="!imageLoaded" class="flex w-full h-full justify-center pt-14">
             <app-spinner [contentLoaded]="imageLoaded" />
         </div>
         
