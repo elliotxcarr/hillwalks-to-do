@@ -1,4 +1,4 @@
-import { createReducer, on, State } from "@ngrx/store";
+import { createReducer, on} from "@ngrx/store";
 import { User } from "../../models/User";
 import { loginRequest, loginSuccess, loginFailure, logOut } from "./auth.actions";
 
@@ -34,7 +34,7 @@ export const authReducer = createReducer(
     on(loginFailure, (state, { error }) => ({
         ...state,
         loading: false,
-        error: error,  // Store error message if login fails
+        error: error,
       })),
 
     on(logOut, ()=> initialAuthState)

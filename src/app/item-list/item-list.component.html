@@ -1,6 +1,15 @@
 <div [ngClass]="{'grid grid-cols-2': selectedWalk}">
 
     <div class="flex w-full justify-center h-screen bg-gray-400 flex-col items-center">
+
+        <div class="flex justify-center w-full h-1/12">
+            <div class="py-10">
+                <app-search-bar (search)="onSearch($event)"/>
+            </div>
+
+        </div>
+
+
         <div class="py-3 w-1/2">
             <div>
                 <h1 class="text-xl font-semibold my-2">Sort by:</h1>

@@ -1,5 +1,5 @@
 import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { DetailsPanelComponent } from '../details-panel/details-panel.component';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { Store } from '@ngrx/store';
@@ -11,11 +11,12 @@ import { UserService } from '../services/user.service';
 import { WalkService } from '../services/walk.service';
 import { addCompleteWalk, setWalks } from '../state/userState/user.actions';
 import { getCompletedWalks, selectWalks } from '../state/userState/user.selectors';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 @Component({
   selector: 'app-item-list',
   standalone: true,
-  imports: [DetailsPanelComponent, StarRatingComponent, NgClass,NgIf, SpinnerComponent, AsyncPipe, NgFor],
+  imports: [DetailsPanelComponent, StarRatingComponent, NgClass,NgIf, SpinnerComponent, AsyncPipe, NgFor, SearchBarComponent],
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.css'
 })
@@ -24,6 +25,8 @@ export class ItemListComponent implements OnInit {
   private walkService = inject(WalkService)
   private userService = inject(UserService)
   private store = inject(Store)
+
+  searchTerm:string = '';
 
   selectedWalk: Walk | null = null;
   
@@ -63,6 +66,15 @@ export class ItemListComponent implements OnInit {
     ).subscribe(walks => {
       this.walksToDisplay$ = of(walks);
     });
+  }
+
+  onSearch(term: string){
+    //this.searchTerm = term;
+
+    this.walksToDisplay$ = this.walksToDisplay$.pipe(
+      map(walks => walks.filter(walk => walk.name.toLowerCase().includes(term))
+      )
+    )
   }
 
   clearSelection(){

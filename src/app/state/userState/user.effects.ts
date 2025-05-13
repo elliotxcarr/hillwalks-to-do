@@ -1,8 +1,8 @@
 import {inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import * as AuthActions from '../authState/auth.actions';
-import { catchError, EMPTY, exhaustMap, map, of, share, shareReplay, switchMap, tap } from "rxjs";
-import { getWalks, logOutUser, setWalks } from "./user.actions";
+import { catchError, EMPTY, map, switchMap, tap } from "rxjs";
+import { logOutUser} from "./user.actions";
 import { WalkService } from "../../services/walk.service";
 import { Walk } from "../../models/Walk";
 import * as UserActions from './user.actions';
@@ -13,7 +13,7 @@ export class UserEffects{
     private actions$ = inject(Actions)
     private walkService = inject(WalkService)
 
-    logOut$ = createEffect(()=>
+    logOut = createEffect(()=>
         
         this.actions$.pipe(
             ofType(logOutUser),
@@ -35,7 +35,7 @@ export class UserEffects{
               ),
               catchError(err => {
                 console.error('Failed to fetch walks:', err);
-                return EMPTY; // No action dispatched on error
+                return EMPTY; 
               })
             )
           )
