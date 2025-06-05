@@ -1,9 +1,8 @@
 import { Walk } from "./Walk";
 
- export interface User{
+export interface User{
     _id: string ;
     username: string;
-    password: string ;
     name: string ;
     age: number ;
     email:string;

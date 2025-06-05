@@ -1,4 +1,5 @@
 export interface Walk{
+    _id: string;
     name: string;
     location: string;
     difficulty: number;

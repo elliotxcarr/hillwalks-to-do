@@ -16,13 +16,10 @@ export class AuthService {
 
   login(username: string, password:string): Observable<User>{
     const credentials = {username, password};
-    console.log('at login')
     return this.http.post<User>(this.usersApi, credentials)
   }
 
   logout(): void{
     this.router.navigate(['login'])
   }
-
-  
 }

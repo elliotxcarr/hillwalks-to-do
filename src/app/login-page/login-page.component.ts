@@ -1,12 +1,9 @@
-import { Component, inject} from '@angular/core';
+import { Component, computed, inject, Signal} from '@angular/core';
 import '@angular/forms'
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { loginRequest } from '../state/authState/auth.actions';
-import { AuthState } from '../state/authState/auth.reducer';
 import { NgClass, NgIf } from '@angular/common';
-import { selectErrorMessage } from '../state/authState/auth.selectors';
-import { Observable } from 'rxjs';
+import { AuthStore } from '../store/auth/auth.store';
+import { patchState } from '@ngrx/signals';
 
 @Component({
   selector: 'app-login-page',
@@ -16,25 +13,15 @@ import { Observable } from 'rxjs';
 })
 export class LoginPageComponent{
 
-  private readonly store = inject(Store<AuthState>)
+  private readonly store = inject(AuthStore)
   
   errorMessage: string | null = '';
   enteredUsername: string = '';
   enteredPassword: string = '';
-  errorState: Observable<string | null> = this.store.select(selectErrorMessage);
+  errorState: Signal<string | null> = computed(()=> this.store.error())
   
   onSubmit(){
-    let username = this.enteredUsername;
-    let password = this.enteredPassword;
-    
-    if(username == '' || password == ''){
-     this.errorMessage = 'Username and Password are required'
-    }
-    else{
-      this.store.dispatch(loginRequest({username, password}));
-      
-      this.errorState.subscribe(error => this.errorMessage = error)
-    }
+    this.store.loginRequest(this.enteredUsername, this.enteredPassword)
   }
 }
 

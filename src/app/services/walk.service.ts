@@ -14,11 +14,11 @@ export class WalkService {
         return this.http.get<Walk[]>('http://localhost:5001/walks')
     }
 
-    saveCompletedWalk(userId: string, walk: Walk){
+    saveCompletedWalk(userId: string, walk_id: string){
         console.log("in save completed walk")
         return this.http.post<Walk[]>(
             `http://localhost:5001/users/${userId}/completed_walks`,
-            {walk}
+            {walk_id}
         );
     }
 }
