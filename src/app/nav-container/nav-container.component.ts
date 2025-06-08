@@ -15,7 +15,7 @@ export class NavContainerComponent{
 
   private userStore = inject(UserStore)
   private readonly router = inject(Router)
-  loggedInName: Signal<string | undefined> = computed(() => this.userStore.name?.())
+  loggedInName: Signal<string | undefined> = computed(() => this.userStore.name())
 
   logOutUser = ()=>{
     this.router.navigate(['login'])

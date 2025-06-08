@@ -6,17 +6,17 @@ import { WalkService } from "../../services/walk.service";
 import { catchError, EMPTY, tap } from "rxjs";
 import { User } from "../../models/User";
 
-interface sessionSlice {
+interface WalkSlice {
     walks: Walk[],
+    selectedWalk: Walk | null
 }
 
-const initialSessionSlice: sessionSlice = {
+const initialSessionSlice: WalkSlice = {
     walks: [],
+    selectedWalk: null
 }
-//could add a logged in user to this
 
-
-export const SessionStore = signalStore(
+export const WalkStore = signalStore(
     {providedIn: 'root'},
 
     withState(initialSessionSlice),
@@ -50,8 +50,36 @@ export const SessionStore = signalStore(
             ).subscribe()
         }
 
+        const sortWalks = (sortOption:string) => {
+            const walks = store.walksToDisplay();
+            switch (sortOption.toLowerCase()) {
+            case 'rating':
+                return patchState(store, {walks: [...walks].sort((a, b) => b.rating - a.rating)}) ;
+            case 'level':
+                return patchState(store, {walks: [...walks].sort((a, b) => b.difficulty - a.difficulty)});
+            case 'completed':
+                return patchState(store, {walks: [...walks].sort((a, b) => Number(b.completed) - Number(a.completed))});
+            case 'todo':
+                return patchState(store, {walks: [...walks].sort((a, b) => Number(a.completed) - Number(b.completed))});
+            default:
+                return walks;
+            }
+        }
+
+        const setSelectedWalk = (walk: Walk) => {
+            patchState(store, { selectedWalk: walk});
+        }
+        
+        const clearSelectedWalk = () => {
+            patchState(store, { selectedWalk: null});
+        }
+        
+
         return{
-            loadWalks
+            loadWalks,
+            sortWalks,
+            setSelectedWalk,
+            clearSelectedWalk
         }
     })
 )

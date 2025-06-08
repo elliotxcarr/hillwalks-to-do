@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, computed, effect,inject, Signal, signal} from '@angular/core';
 import { SpinnerComponent } from '../shared/spinner/spinner.component';
 import { NgIf } from '@angular/common';
 import { Walk } from '../models/Walk';
 import { FormsModule} from '@angular/forms';
+import { UserStore } from '../store/user/user.store';
+import { WalkStore } from '../store/walk/walks.store';
 
 @Component({
   selector: 'app-details-panel',
@@ -11,32 +13,31 @@ import { FormsModule} from '@angular/forms';
   styleUrl: './details-panel.component.css'
 })
 export class DetailsPanelComponent {
-  
-  _selectedWalk!: Walk ;
+  readonly userStore = inject(UserStore);
+  readonly walkStore = inject(WalkStore);
 
-  @Input() set selectedWalk(walk: Walk){
-     if (!this._selectedWalk || this._selectedWalk.image !== walk.image) {
-      this.imageLoaded = false;
-    }
-    this._selectedWalk = walk;
+  selectedWalk: Signal<Walk | null> =  computed(()=> this.walkStore.selectedWalk()) 
+  imageLoaded = signal(false);
+  private selectedImageUrl: string | null = null;
+
+  constructor(){
+    effect(()=>{
+      const walk = this.selectedWalk();
+
+      if(!walk) return;
+
+      if(walk.image !== this.selectedImageUrl){
+        this.imageLoaded.set(false);
+        this.selectedImageUrl = walk.image
+      }
+    })
   }
 
-  @Output() close = new EventEmitter<void>();
-  @Output() refresh = new EventEmitter<void>();
-  @Output() sendComplete = new EventEmitter<Walk>();
-
-  imageLoaded: boolean = false;
-
   closeComponent = ()=>{
-     this.close.emit();
+    this.walkStore.clearSelectedWalk()
   }
 
   walkComplete(walk:Walk){
-    if(walk){
-      this.sendComplete.emit(walk)
-    }
-    else{
-      console.error('No walk selected')
-    }
+    this.userStore.saveCompletedWalk(walk)
   }
 }

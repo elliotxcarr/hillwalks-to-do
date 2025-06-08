@@ -6,7 +6,7 @@ import { catchError, EMPTY, finalize, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../../models/User';
 import { UserStore } from '../user/user.store';
-import { SessionStore } from '../session/session.store';
+import { WalkStore } from '../walk/walks.store';
 
 export const AuthStore = signalStore(
     {providedIn:'root'},
@@ -20,7 +20,7 @@ export const AuthStore = signalStore(
 
     withMethods((store, authService = inject(AuthService), router = inject(Router),) => {
         const userStore = inject(UserStore)
-        const sessionStore = inject(SessionStore)
+        const walkStore = inject(WalkStore)
         const loginRequest = (username: string, password:string) => {
             patchState(store, ()=> ({loading: true}));
 
@@ -32,7 +32,7 @@ export const AuthStore = signalStore(
             authService.login(username, password).pipe(
                 tap((user:User)=>{
                     userStore.setUser(user)
-                    sessionStore.loadWalks()
+                    walkStore.loadWalks()
                     router.navigate(['home'])
                 }),
                 finalize(()=>{

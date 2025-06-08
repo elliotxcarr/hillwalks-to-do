@@ -1,9 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
   Component,
-  computed,
   inject,
-  signal,
   Signal,
 } from '@angular/core';
 import { DetailsPanelComponent } from '../details-panel/details-panel.component';
@@ -11,8 +9,7 @@ import { StarRatingComponent } from '../star-rating/star-rating.component';
 import { SpinnerComponent } from '../shared/spinner/spinner.component';
 import { Walk } from '../models/Walk';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
-import { UserStore } from '../store/user/user.store';
-import { SessionStore } from '../store/session/session.store';
+import { WalkStore } from '../store/walk/walks.store';
 
 @Component({
   selector: 'app-item-list',
@@ -31,35 +28,12 @@ import { SessionStore } from '../store/session/session.store';
 })
 
 export class ItemListComponent {
-  private userStore = inject(UserStore);
-  private sessionStore = inject(SessionStore);
+  private walkStore = inject(WalkStore);
   searchTerm: string = '';
 
-  selectedWalk: Walk | null = null;
+  selectedWalk: Signal<Walk | null> = this.walkStore.selectedWalk;
 
-  sortOption = signal<string>('');
-
-  combinedWalks:Signal<Walk[]> = this.sessionStore.walksToDisplay;
-
-  sortedWalks: Signal<Walk[]> = computed(() => {
-    const walks = this.combinedWalks();
-    switch (this.sortOption().toLowerCase()) {
-      case 'rating':
-        return [...walks].sort((a, b) => b.rating - a.rating);
-      case 'level':
-        return [...walks].sort((a, b) => b.difficulty - a.difficulty);
-      case 'completed':
-        return [...walks].sort(
-          (a, b) => Number(b.completed) - Number(a.completed)
-        );
-      case 'todo':
-        return [...walks].sort(
-          (a, b) => Number(a.completed) - Number(b.completed)
-        );
-      default:
-        return walks;
-    }
-  });
+  combinedWalks:Signal<Walk[]> = this.walkStore.walksToDisplay;
 
   sortOptions: string[] = ['Rating', 'Level', 'Completed', 'Todo'];
 
@@ -67,16 +41,8 @@ export class ItemListComponent {
     //this.searchTerm = term;
   }
 
-  clearSelection() {
-    this.selectedWalk = null;
-  }
-
   sendWalk(walk: Walk) {
-    this.selectedWalk = walk;
-  }
-
-  handleWalkComplete(walk: Walk) {
-    this.userStore.saveCompletedWalk(walk);
+    this.walkStore.setSelectedWalk(walk)
   }
 
   getDifficultyColour(difficulty: number): string {
@@ -92,6 +58,6 @@ export class ItemListComponent {
   }
 
   handleSort(option: string) {
-    this.sortOption.set(option);
+    this.walkStore.sortWalks(option)
   }
 }

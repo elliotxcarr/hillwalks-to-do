@@ -1,4 +1,4 @@
-<div [ngClass]="{'grid grid-cols-2': selectedWalk}">
+<div [ngClass]="selectedWalk() ? 'grid grid-cols-2' : ''">
 
     <div class="flex w-full justify-center h-screen bg-gray-400 flex-col items-center">
 
@@ -22,11 +22,11 @@
 
         <div class="flex flex-col w-full justify-center h-screen items-center overflow-auto">
 
-            <div *ngIf="sortedWalks().length === 0" class="flex justify-center items-center h-full w-full">
-                <app-spinner [contentLoaded]="sortedWalks().length !== 0"></app-spinner>
+            <div *ngIf="combinedWalks().length === 0" class="flex justify-center items-center h-full w-full">
+                <app-spinner [contentLoaded]="combinedWalks().length !== 0"></app-spinner>
             </div>
             <ul class="w-4/5 overflow-y-scroll no-scrollbar pb-15">
-                <li *ngFor="let walk of sortedWalks()" class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer"
+                <li *ngFor="let walk of combinedWalks()" class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer"
                     [ngClass]="{'bg-gray-300': !walk.completed, 'bg-green-300 hover:bg-green-200': walk.completed}"
                     (click)="sendWalk(walk)">
                     <div class="flex justify-between pb-2">
@@ -46,6 +46,5 @@
             </ul>
         </div>
     </div>
-    <app-details-panel [selectedWalk]="selectedWalk" *ngIf="selectedWalk" (close)="clearSelection()"
-        (sendComplete)="handleWalkComplete($event)"></app-details-panel>
+    <app-details-panel></app-details-panel>
 </div>
