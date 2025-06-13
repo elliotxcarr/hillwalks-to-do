@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { WalkStore } from '../store/walk/walks.store';
 
 @Component({
   selector: 'app-search-bar',
@@ -8,6 +9,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class SearchBarComponent {
 
-  @Output() search = new EventEmitter<string>();
+  readonly store = inject(WalkStore);
+  
 
 }

@@ -4,16 +4,17 @@ import { computed, inject, Signal } from "@angular/core";
 import { UserStore } from "../user/user.store";
 import { WalkService } from "../../services/walk.service";
 import { catchError, EMPTY, tap } from "rxjs";
-import { User } from "../../models/User";
 
 interface WalkSlice {
     walks: Walk[],
-    selectedWalk: Walk | null
+    selectedWalk: Walk | null,
+    allWalks: Walk[],
 }
 
 const initialSessionSlice: WalkSlice = {
     walks: [],
-    selectedWalk: null
+    selectedWalk: null,
+    allWalks: [],
 }
 
 export const WalkStore = signalStore(
@@ -41,7 +42,7 @@ export const WalkStore = signalStore(
         const loadWalks = ()=> {
             walkService.getAllWalks().pipe(
                 tap((wks) => {
-                    patchState(store, () => ({walks: wks}))
+                    patchState(store, () => ({walks: wks, allWalks: wks}))
                 }),
                 catchError((err) => {
                     console.error(err)
@@ -74,12 +75,21 @@ export const WalkStore = signalStore(
             patchState(store, { selectedWalk: null});
         }
         
+        const searchForWalk = (searchTerm: string)=> {
+            const allWalks = store.allWalks();
+            const searchResult = allWalks.filter(walk => walk.name.toLowerCase().includes(searchTerm.toLowerCase()))
+            console.log(allWalks)
+            patchState(store, ({walks: searchResult}))
+        }
+
+        
 
         return{
             loadWalks,
             sortWalks,
             setSelectedWalk,
-            clearSelectedWalk
+            clearSelectedWalk,
+            searchForWalk
         }
     })
 )
