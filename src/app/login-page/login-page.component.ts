@@ -3,6 +3,7 @@ import '@angular/forms'
 import { FormsModule } from '@angular/forms';
 import { NgClass, NgIf } from '@angular/common';
 import { AuthStore } from '../store/auth/auth.store';
+import { LoginRequest } from '../models/LoginReq';
 
 @Component({
   selector: 'app-login-page',
@@ -12,15 +13,18 @@ import { AuthStore } from '../store/auth/auth.store';
 })
 export class LoginPageComponent{
 
-  private readonly store = inject(AuthStore)
+  readonly authStore = inject(AuthStore)
   
   errorMessage: string | null = '';
   enteredUsername: string = '';
   enteredPassword: string = '';
-  errorState: Signal<string | null> = computed(()=> this.store.error())
   
   onSubmit(){
-    this.store.loginRequest(this.enteredUsername, this.enteredPassword)
+    const loginReq: LoginRequest = {
+      username: this.enteredUsername,
+      password: this.enteredPassword
+    }
+    this.authStore.performLogin(loginReq)
   }
 }
 

@@ -11,7 +11,7 @@
             <input type="password" (click)="errorMessage=''" id="password" [(ngModel)]="enteredPassword" name="password"
                 data-lpignore="true" required [ngClass]="{'border-2 border-red-500':this.errorMessage }">
         </div>
-        <div id="errorMessageContainer" *ngIf="errorState() as error" class="flex px-4">
+        <div id="errorMessageContainer" *ngIf="authStore.error() as error" class="flex px-4">
             <p class="text-lg text-red-500">{{error}}</p>
         </div>
         <button type="submit" class="bg-gray-400 text-2xl p-2 hover:bg-gray-500 hover:cursor-pointer">Login</button>
