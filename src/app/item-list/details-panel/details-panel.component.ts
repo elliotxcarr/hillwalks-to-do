@@ -1,10 +1,9 @@
-import { Component, computed, effect,inject, Signal, signal} from '@angular/core';
-import { SpinnerComponent } from '../shared/spinner/spinner.component';
+import { Component, effect,inject, signal} from '@angular/core';
 import { NgIf } from '@angular/common';
-import { Walk } from '../models/Walk';
 import { FormsModule} from '@angular/forms';
-import { UserStore } from '../store/user/user.store';
-import { WalkStore } from '../store/walk/walks.store';
+import { SpinnerComponent } from '../../utils/spinner/spinner.component';
+import { UserStore } from '../../store/user/user.store';
+import { WalkStore } from '../../store/walk/walks.store';
 
 @Component({
   selector: 'app-details-panel',

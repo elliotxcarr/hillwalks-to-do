@@ -3,11 +3,11 @@ import {
   Component,
   inject,
 } from '@angular/core';
-import { DetailsPanelComponent } from '../details-panel/details-panel.component';
-import { StarRatingComponent } from '../star-rating/star-rating.component';
-import { SpinnerComponent } from '../shared/spinner/spinner.component';
-import { SearchBarComponent } from '../search-bar/search-bar.component';
+import { StarRatingComponent } from '../utils/search-bar/star-rating/star-rating.component';
+import { SpinnerComponent } from '../utils/spinner/spinner.component';
 import { WalkStore } from '../store/walk/walks.store';
+import { SearchBarComponent } from '../utils/search-bar/search-bar.component';
+import { DetailsPanelComponent } from './details-panel/details-panel.component';
 
 @Component({
   selector: 'app-item-list',
