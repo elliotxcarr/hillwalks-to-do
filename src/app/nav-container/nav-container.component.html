@@ -1,10 +1,10 @@
 <div class="flex w-full max-h-screen flex-col ">
     <div class="flex flex-row h-15 bg-gray-300 top-0 drop-shadow-xl ">
         <div  class="p-4">
-            <h1 *ngIf="loggedInName() as name" class="text-2xl">Welcome {{name}}!</h1>
+            <h1 *ngIf="userStore.name() as name" class="text-2xl">Welcome {{name}}!</h1>
         </div>
         <div class="right-0 absolute p-4 ">
-            <h1 class="text-xl hover:cursor-pointer" (click)="logOutUser()">Log Out</h1>
+            <h1 class="text-xl hover:cursor-pointer" (click)="authStore.logout()">Log Out</h1>
         </div>
     </div>
     <app-item-list class="overflow-hidden"/>

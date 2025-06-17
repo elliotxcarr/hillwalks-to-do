@@ -1,8 +1,8 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ItemListComponent } from "../item-list/item-list.component";
-import { Router } from '@angular/router';
 import { UserStore } from '../store/user/user.store';
 import { NgIf } from '@angular/common';
+import { AuthStore } from '../store/auth/auth.store';
 
 @Component({
   selector: 'app-nav-container',
@@ -13,12 +13,6 @@ import { NgIf } from '@angular/common';
 })
 export class NavContainerComponent{
 
-  private userStore = inject(UserStore)
-  private readonly router = inject(Router)
-  loggedInName: Signal<string | undefined> = computed(() => this.userStore.name())
-
-  logOutUser = ()=>{
-    this.router.navigate(['login'])
-  }
-  
+  readonly userStore = inject(UserStore)
+  readonly authStore = inject(AuthStore)
 }
