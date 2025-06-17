@@ -16,13 +16,12 @@ export class DetailsPanelComponent {
   readonly userStore = inject(UserStore);
   readonly walkStore = inject(WalkStore);
 
-  selectedWalk: Signal<Walk | null> =  computed(()=> this.walkStore.selectedWalk()) 
   imageLoaded = signal(false);
   private selectedImageUrl: string | null = null;
 
   constructor(){
     effect(()=>{
-      const walk = this.selectedWalk();
+      const walk = this.walkStore.selectedWalk();
 
       if(!walk) return;
 
@@ -31,13 +30,5 @@ export class DetailsPanelComponent {
         this.selectedImageUrl = walk.image
       }
     })
-  }
-
-  closeComponent = ()=>{
-    this.walkStore.clearSelectedWalk()
-  }
-
-  walkComplete(walk:Walk){
-    this.userStore.saveCompletedWalk(walk)
   }
 }

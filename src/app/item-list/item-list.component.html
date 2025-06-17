@@ -1,4 +1,4 @@
-<div [ngClass]="selectedWalk() ? 'grid grid-cols-2' : ''">
+<div [ngClass]="walkStore.selectedWalk() ? 'grid grid-cols-2' : ''">
 
     <div class="flex w-full justify-center h-screen bg-gray-400 flex-col items-center">
 
@@ -15,20 +15,19 @@
             <div class="flex flex-row justify-around w-full">
                 <div class="bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200"
                     *ngFor="let option of sortOptions">
-                    <button class="hover:cursor-pointer" (click)="handleSort(option)">{{option}}</button>
+                    <button class="hover:cursor-pointer" (click)="walkStore.sortWalks(option)">{{option}}</button>
                 </div>
             </div>
         </div>
 
         <div class="flex flex-col w-full h-screen items-center overflow-auto">
 
-            <div *ngIf="combinedWalks().length === 0" class="flex justify-center items-center h-full w-full">
-                <app-spinner [contentLoaded]="combinedWalks().length !== 0"></app-spinner>
-            </div>
+            <app-spinner [ngClass]="walkStore.isLoading() ? 'flex  h-full' : ''" [contentLoaded]="!walkStore.isLoading()"></app-spinner>
+            
             <ul class="w-4/5 overflow-y-scroll no-scrollbar pb-15">
-                <li *ngFor="let walk of combinedWalks()" class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer"
+                <li *ngFor="let walk of walkStore.walksToDisplay()" class="py-2 p-3 rounded-xl my-4 px-8 hover:bg-gray-200 cursor-pointer"
                     [ngClass]="{'bg-gray-300': !walk.completed, 'bg-green-300 hover:bg-green-200': walk.completed}"
-                    (click)="sendWalk(walk)">
+                    (click)="walkStore.setSelectedWalk(walk)">
                     <div class="flex justify-between pb-2">
                         <h1 class="font-semibold text-2xl">{{ walk.name }}</h1>
                         <h1 class="font-semibold text-2xl">{{ walk.location }}</h1>
@@ -45,6 +44,7 @@
                 </li>
             </ul>
         </div>
+         
     </div>
-    <app-details-panel></app-details-panel>
+   <app-details-panel></app-details-panel>
 </div>
