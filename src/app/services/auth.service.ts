@@ -9,17 +9,11 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  private usersApi = 'http://localhost:5001/login';
-
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
   login(username: string, password:string): Observable<User>{
     const credentials = {username, password};
-    return this.http.post<User>(this.usersApi, credentials)
-  }
-
-  logout(): void{
-    this.router.navigate(['login'])
+    return this.http.post<User>('http://localhost:5001/login', credentials)
   }
 }

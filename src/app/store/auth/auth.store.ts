@@ -8,7 +8,7 @@ import { User } from '../../models/User';
 import { UserStore } from '../user/user.store';
 import { WalkStore } from '../walk/walks.store';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { setError, setLoading } from './auth.updaters';
+import { clearLoggedInUser, setError, setLoading } from './auth.updaters';
 import { LoginRequest } from '../../models/LoginReq';
 
 export const AuthStore = signalStore(
@@ -51,8 +51,15 @@ export const AuthStore = signalStore(
             loginRequest(request)
         }
 
+        const logout =()=>{
+            patchState(store, clearLoggedInUser());
+            store._userStore.clearUser();
+            store._router.navigate(['login']);
+        }
+
         return{
-            performLogin
+            performLogin,
+            logout
         }
     })
 )

@@ -8,3 +8,7 @@ export function setLoading(loading: boolean): PartialStateUpdater<AuthSlice>{
 export function setError(error:string): PartialStateUpdater<AuthSlice>{
     return _ => ({error})
 }
+
+export function clearLoggedInUser(): PartialStateUpdater<AuthSlice>{
+    return _ => ({loggedInUser: null})
+}
