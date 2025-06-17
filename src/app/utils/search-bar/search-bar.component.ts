@@ -1,5 +1,6 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { WalkStore } from '../store/walk/walks.store';
+import { Component, inject} from '@angular/core';
+import { WalkStore } from '../../store/walk/walks.store';
+
 
 @Component({
   selector: 'app-search-bar',
@@ -10,6 +11,4 @@ import { WalkStore } from '../store/walk/walks.store';
 export class SearchBarComponent {
 
   readonly store = inject(WalkStore);
-  
-
 }
