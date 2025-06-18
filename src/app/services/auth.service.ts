@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { Observable} from 'rxjs';
 import { User } from '../models/User';
-import { Router } from '@angular/router';
+import { LoginRequest } from '../models/LoginReq';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +10,8 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   private readonly http = inject(HttpClient);
-  private readonly router = inject(Router);
 
-  login(username: string, password:string): Observable<User>{
-    const credentials = {username, password};
-    return this.http.post<User>('http://localhost:5001/login', credentials)
+  login(re:LoginRequest): Observable<User>{
+    return this.http.post<User>('http://localhost:5001/login', re)
   }
 }

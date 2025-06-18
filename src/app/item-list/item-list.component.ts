@@ -3,7 +3,7 @@ import {
   Component,
   inject,
 } from '@angular/core';
-import { StarRatingComponent } from '../utils/search-bar/star-rating/star-rating.component';
+import { StarRatingComponent } from '../utils/star-rating/star-rating.component';
 import { SpinnerComponent } from '../utils/spinner/spinner.component';
 import { WalkStore } from '../store/walk/walks.store';
 import { SearchBarComponent } from '../utils/search-bar/search-bar.component';

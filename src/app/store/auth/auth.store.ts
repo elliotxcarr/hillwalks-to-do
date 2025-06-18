@@ -26,7 +26,7 @@ export const AuthStore = signalStore(
         const loginRequest = rxMethod<LoginRequest>(req =>{
             const output = req.pipe(
                 tap(()=> patchState(store, setLoading(true))),
-                switchMap((req) => store._authService.login(req.username, req.password)),
+                switchMap((req) => store._authService.login(req)),
                 tap((user:User)=> {
                     
                     store._userStore.setUser(user)

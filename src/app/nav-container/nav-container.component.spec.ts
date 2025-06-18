@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavContainerComponent } from './nav-container.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('NavContainerComponent', () => {
   let component: NavContainerComponent;
@@ -8,7 +9,10 @@ describe('NavContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavContainerComponent]
+      imports: [NavContainerComponent],
+      providers:[
+        provideHttpClient()
+      ]
     })
     .compileComponents();
 
