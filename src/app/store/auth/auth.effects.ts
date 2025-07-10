@@ -30,12 +30,10 @@ export function withAuthEffects<_>() {
                 _userStore.setUser(user)
                 _walkStore.fetchWalks()
                 _router.navigate(['home'])
-                _dispatcher.dispatch(authEvents.loginSuccess(user))
               },
               error: (err: HttpErrorResponse) => {
                 const errorMsg = err.error?.error;
                 _dispatcher.dispatch(authEvents.loginFailure(errorMsg))
-                console.log(errorMsg)
               }
             })
           ))

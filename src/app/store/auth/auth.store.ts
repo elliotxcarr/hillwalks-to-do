@@ -3,7 +3,6 @@ import { initialAuthSlice } from './auth.slice'
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserStore } from '../user/user.store';
-import { clearLoggedInUser, setError} from './auth.updaters';
 import { LoginRequest } from '../../models/LoginReq';
 import { Dispatcher, eventGroup} from '@ngrx/signals/events';
 import { User } from '../../models/User';
@@ -34,14 +33,14 @@ export const AuthStore = signalStore(
 
   const performLogin = (request:LoginRequest) => {
       if(!request.username || !request.password){
-          patchState(store, setError('Username and Password are required'));
+          patchState(store, {error:'Username and Password are required'});
           return;
       }
       store._dispatcher.dispatch(authEvents.loginRequest(request))
   }
 
   const logout =()=>{
-      patchState(store, clearLoggedInUser());
+      patchState(store, ({loggedInUser: null}));
       store._userStore.clearUser();
       store._router.navigate(['login']);
   }

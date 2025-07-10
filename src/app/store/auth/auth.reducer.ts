@@ -1,23 +1,14 @@
 import { signalStoreFeature, type } from "@ngrx/signals";
 import { on, withReducer } from "@ngrx/signals/events";
-import { setError, setLoading, setLoggedInUser } from "./auth.updaters";
 import { authEvents } from "./auth.store";
+import { AuthSlice } from "./auth.slice";
 
 export function withAuthReducer<_>(){
   return signalStoreFeature(
-    type<{}>(),
+    type<{state:AuthSlice}>(),
     withReducer(
-      on(authEvents.loginRequest, (_) => setLoading(true)),
-      on(authEvents.loginSuccess, (event) => {
-        setLoggedInUser(event.payload);
-        setLoading(false)
-        return{}
-      }),
-      on(authEvents.loginFailure, (event) => {
-        setError(event.payload)
-        setLoading(false)
-        return{}
-      })
+      on(authEvents.loginRequest, (_) => ({loading: true})),
+      on(authEvents.loginFailure, (event) => ({error: event.payload, loading: false}))
     )
   )
 }
