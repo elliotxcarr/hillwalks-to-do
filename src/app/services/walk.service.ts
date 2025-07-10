@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Walk } from "../models/Walk";
-import { catchError, of, shareReplay } from "rxjs";
+import { catchError, Observable, of, shareReplay } from "rxjs";
 
 @Injectable({
     providedIn: 'root',
@@ -10,7 +10,7 @@ import { catchError, of, shareReplay } from "rxjs";
 export class WalkService {
     private readonly http = inject(HttpClient);
 
-    getAllWalks(){
+    getAllWalks(): Observable<Walk[]>{
         return this.http.get<Walk[]>('http://localhost:5001/walks')
     }
 

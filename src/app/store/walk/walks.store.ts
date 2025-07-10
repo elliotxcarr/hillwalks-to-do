@@ -8,9 +8,11 @@ import { initialWalkSlice } from "./walks.slice";
 import { rxMethod} from '@ngrx/signals/rxjs-interop';
 import { clearSelectedWalk, setSelectedWalk, setWalksLoading } from "./walks.updaters";
 import {entityConfig, setAllEntities, withEntities,} from '@ngrx/signals/entities';
-import {eventGroup} from '@ngrx/signals/events';
+import {Dispatcher, eventGroup, Events, on, withEffects, withReducer} from '@ngrx/signals/events';
+import { withWalkEffects } from "./walks.effects";
+import { withWalkReducer } from "./walks.reducer";
 
-const walkConfig = entityConfig({
+export const walkConfig = entityConfig({
     entity: type<Walk>(),
     collection: '_walks',
     selectId:(walk) => walk._id
@@ -29,11 +31,13 @@ export const WalkStore = signalStore(
     {providedIn: 'root'},
 
     withState(initialWalkSlice),
-    withEntities(walkConfig),
     withProps(_ => ({
-        _walkService : inject(WalkService),
-        _userStore: inject(UserStore)
+        _userStore: inject(UserStore),
+        _dispatcher: inject(Dispatcher)
     })),
+    withEntities(walkConfig),
+    withWalkEffects(),
+    withWalkReducer(),
     withComputed(store => {
         const walksToDisplay = computed(() => {
             const walks = store._walksEntities() ?? [];
@@ -67,20 +71,7 @@ export const WalkStore = signalStore(
             walksToDisplay
         }
     }),
-
     withMethods((store) => {
-        const fetchWalks = rxMethod<void>(pipe(
-            tap(()=> patchState(store, setWalksLoading(true))),
-            switchMap(()=> store._walkService.getAllWalks()),
-            tap((wks) => {
-                patchState(store, setAllEntities(wks, walkConfig), setWalksLoading(false))
-            }),
-            catchError((err) => {
-                console.error(err)
-                return EMPTY
-            })
-        ))
-
         const sortWalks = (sortOption:string) => {
             patchState(store, { sortOption });
         }
@@ -90,7 +81,7 @@ export const WalkStore = signalStore(
         }
 
         return{
-            fetchWalks,
+            fetchWalks: () => store._dispatcher.dispatch(walkEvents.load()),
             sortWalks,
             setSelectedWalk: (walk:Walk) => patchState(store, setSelectedWalk(walk)),
             clearSelectedWalk: () => patchState(store, clearSelectedWalk()),
