@@ -1,34 +1,70 @@
-import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
+import { patchState, signalStore, type, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
 import { Walk } from "../../models/Walk";
-import { computed, inject, Signal } from "@angular/core";
+import { computed, inject} from "@angular/core";
 import { UserStore } from "../user/user.store";
 import { WalkService } from "../../services/walk.service";
-import { catchError, delay, EMPTY, pipe, switchMap, tap} from "rxjs";
+import { catchError, EMPTY, pipe, switchMap, tap} from "rxjs";
 import { initialWalkSlice } from "./walks.slice";
-import { rxMethod} from '@ngrx/signals/rxjs-interop'
+import { rxMethod} from '@ngrx/signals/rxjs-interop';
 import { clearSelectedWalk, setSelectedWalk, setWalksLoading } from "./walks.updaters";
+import {entityConfig, setAllEntities, withEntities,} from '@ngrx/signals/entities';
+import {eventGroup} from '@ngrx/signals/events';
+
+const walkConfig = entityConfig({
+    entity: type<Walk>(),
+    collection: '_walks',
+    selectId:(walk) => walk._id
+})
+
+export const walkEvents = eventGroup({
+    source: 'Walks',
+    events:{
+        load: type<void>(),
+        loaded:type<Walk[]>()
+    }
+});
+
 
 export const WalkStore = signalStore(
     {providedIn: 'root'},
 
     withState(initialWalkSlice),
-
+    withEntities(walkConfig),
     withProps(_ => ({
         _walkService : inject(WalkService),
         _userStore: inject(UserStore)
     })),
-
-    withComputed((store) => {
-        const walksToDisplay: Signal<Walk[]> = computed(() =>{
-            const allWalks = store.walks() ?? [];
+    withComputed(store => {
+        const walksToDisplay = computed(() => {
+            const walks = store._walksEntities() ?? [];
             const completed = store._userStore.completed_walks() ?? [];
-            return allWalks.map((walk) => ({
+
+            let walksWithCompleted = walks.map((walk) => ({
                 ...walk,
                 completed: !!completed.find((cw) => cw._id === walk._id),
             }));
-        });
+
+            if (store.searchTerm()) {
+                walksWithCompleted = walks.filter(walk =>
+                    walk.name.toLowerCase().includes(store.searchTerm())
+                );
+            }
+
+            switch (store.sortOption()?.toLowerCase()) {
+                case 'rating':
+                    return [...walksWithCompleted].sort((a, b) => b.rating - a.rating);
+                case 'level':
+                    return [...walksWithCompleted].sort((a, b) => b.difficulty - a.difficulty);
+                case 'completed':
+                    return [...walksWithCompleted].sort((a, b) => Number(b.completed) - Number(a.completed));
+                case 'todo':
+                    return [...walksWithCompleted].sort((a, b) => Number(a.completed) - Number(b.completed));
+                default:
+                    return walksWithCompleted;
+            }
+        })
         return {
-            walksToDisplay,
+            walksToDisplay
         }
     }),
 
@@ -37,7 +73,7 @@ export const WalkStore = signalStore(
             tap(()=> patchState(store, setWalksLoading(true))),
             switchMap(()=> store._walkService.getAllWalks()),
             tap((wks) => {
-                patchState(store, ({walks:wks, allWalks: wks}), setWalksLoading(false))
+                patchState(store, setAllEntities(wks, walkConfig), setWalksLoading(false))
             }),
             catchError((err) => {
                 console.error(err)
@@ -46,33 +82,15 @@ export const WalkStore = signalStore(
         ))
 
         const sortWalks = (sortOption:string) => {
-            const walks = store.walksToDisplay();
-            switch (sortOption.toLowerCase()) {
-            case 'rating':
-                return patchState(store, {walks: [...walks].sort((a, b) => b.rating - a.rating)}) ;
-            case 'level':
-                return patchState(store, {walks: [...walks].sort((a, b) => b.difficulty - a.difficulty)});
-            case 'completed':
-                return patchState(store, {walks: [...walks].sort((a, b) => Number(b.completed) - Number(a.completed))});
-            case 'todo':
-                return patchState(store, {walks: [...walks].sort((a, b) => Number(a.completed) - Number(b.completed))});
-            default:
-                return walks;
-            }
+            patchState(store, { sortOption });
         }
-        const loadWalks = () => {
-            fetchWalks()
-        }
-        
+
         const searchForWalk = (searchTerm: string)=> {
-            const allWalks = [...store.allWalks()];
-            const searchResult = allWalks.filter(walk => 
-                walk.name.toLowerCase().includes(searchTerm.toLowerCase()))
-            patchState(store, ({walks: searchResult}))
+            patchState(store, {searchTerm})
         }
 
         return{
-            loadWalks,
+            fetchWalks,
             sortWalks,
             setSelectedWalk: (walk:Walk) => patchState(store, setSelectedWalk(walk)),
             clearSelectedWalk: () => patchState(store, clearSelectedWalk()),

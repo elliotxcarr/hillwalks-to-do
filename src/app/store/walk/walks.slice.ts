@@ -1,15 +1,15 @@
 import { Walk } from "../../models/Walk"
 
 export interface WalkSlice {
-    walks: Walk[],
     selectedWalk: Walk | null,
-    allWalks: Walk[],
-    isLoading: boolean
+    isLoading: boolean,
+    sortOption:string,
+    searchTerm: string
 }
 
 export const initialWalkSlice: WalkSlice = {
-    walks: [],
     selectedWalk: null,
-    allWalks: [],
     isLoading: false,
+    sortOption: '',
+    searchTerm: '',
 }
