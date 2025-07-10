@@ -1,65 +1,54 @@
-import {patchState, signalStore, withMethods, withProps, withState} from '@ngrx/signals'
+import {patchState, signalStore, type, withMethods, withProps, withState} from '@ngrx/signals'
 import { initialAuthSlice } from './auth.slice'
 import { inject } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { catchError, EMPTY, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { User } from '../../models/User';
 import { UserStore } from '../user/user.store';
-import { WalkStore } from '../walk/walks.store';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { clearLoggedInUser, setError, setLoading } from './auth.updaters';
+import { clearLoggedInUser, setError} from './auth.updaters';
 import { LoginRequest } from '../../models/LoginReq';
+import { Dispatcher, eventGroup} from '@ngrx/signals/events';
+import { User } from '../../models/User';
+import { withAuthEffects } from './auth.effects';
+import { withAuthReducer } from './auth.reducer';
+
+export const authEvents = eventGroup({
+    source:'Auth',
+    events:{
+        loginRequest: type<LoginRequest>(),
+        loginSuccess: type<User>(),
+        loginFailure: type<string>()
+    }
+})
 
 export const AuthStore = signalStore(
-    {providedIn:'root'},
-    withState(initialAuthSlice),
+  {providedIn:'root'},
+  withState(initialAuthSlice),
 
-    withProps(_=>({
-        _walkStore : inject(WalkStore),
-        _userStore : inject(UserStore),
-        _authService: inject(AuthService),
-        _router: inject(Router)
-    })),
+  withProps(_=>({
+    _userStore : inject(UserStore),
+    _router: inject(Router),
+    _dispatcher: inject(Dispatcher)
+  })),
+  withAuthEffects(),
+  withAuthReducer(),
+  withMethods((store) => {
 
-    withMethods((store) => {
-        const loginRequest = rxMethod<LoginRequest>(req =>{
-            const output = req.pipe(
-                tap(()=> patchState(store, setLoading(true))),
-                switchMap((req) => store._authService.login(req)),
-                tap((user:User)=> {
-                    
-                    store._userStore.setUser(user)
-                    store._walkStore.loadWalks()
-                    store._router.navigate(['home'])
-                    patchState(store, setLoading(false))
-                }),
-                catchError(err=>{
-                    const errorMsg = err.error?.error;
-                    patchState(store, setError(errorMsg))
-                    return EMPTY;
-                })
-            )
-            return output
-        })
+  const performLogin = (request:LoginRequest) => {
+      if(!request.username || !request.password){
+          patchState(store, setError('Username and Password are required'));
+          return;
+      }
+      store._dispatcher.dispatch(authEvents.loginRequest(request))
+  }
 
-        const performLogin = (request:LoginRequest) => {
-            if(!request.username || !request.password){
-                patchState(store, setError('Username and Password are required'));
-                return;
-            }
-            loginRequest(request)
-        }
+  const logout =()=>{
+      patchState(store, clearLoggedInUser());
+      store._userStore.clearUser();
+      store._router.navigate(['login']);
+  }
 
-        const logout =()=>{
-            patchState(store, clearLoggedInUser());
-            store._userStore.clearUser();
-            store._router.navigate(['login']);
-        }
-
-        return{
-            performLogin,
-            logout
-        }
-    })
+  return{
+      performLogin,
+      logout
+    }
+  })
 )

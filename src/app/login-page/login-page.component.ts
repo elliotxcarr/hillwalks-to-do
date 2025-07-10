@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgClass, NgIf } from '@angular/common';
 import { AuthStore } from '../store/auth/auth.store';
 import { LoginRequest } from '../models/LoginReq';
+import { Dispatcher } from '@ngrx/signals/events';
 
 @Component({
   selector: 'app-login-page',
@@ -14,7 +15,7 @@ import { LoginRequest } from '../models/LoginReq';
 export class LoginPageComponent{
 
   readonly authStore = inject(AuthStore)
-  
+  readonly dispatcher: Dispatcher = inject(Dispatcher)
   errorMessage: string | null = '';
   enteredUsername: string = '';
   enteredPassword: string = '';
