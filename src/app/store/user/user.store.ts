@@ -7,23 +7,24 @@ import { inject } from "@angular/core";
 import { clearUser, setUser } from "./user.updaters";
 
 export const UserStore = signalStore(
-    {providedIn: 'root'},
-    withState(initialUserSlice),
-    withProps(()=> ({
-        _walkService :inject(WalkService)
-    })),
-    withMethods((store)=>{
+	{ providedIn: 'root' },
+	withState(initialUserSlice),
+	withProps(() => ({
+		_walkService: inject(WalkService),
+	})),
+	withMethods((store) => {
+		const saveCompletedWalk = (walk: Walk) => {
+			patchState(store, (state) => ({
+				completed_walks: [...state.completed_walks, walk],
+			}));
 
-        const saveCompletedWalk = (walk: Walk) =>{
-            patchState(store, (state)=> ({completed_walks: [...state.completed_walks, walk]}));
-        
-            store._walkService.saveCompletedWalk(store._id(), walk._id).subscribe()
-        }
+			store._walkService.saveCompletedWalk(store._id(), walk._id).subscribe();
+		};
 
-        return {
-            saveCompletedWalk,
-            setUser: (user:User) => patchState(store, setUser(user)),
-            clearUser: ()=> patchState(store, clearUser())
-        }
-    })
-)
+		return {
+			saveCompletedWalk,
+			setUser: (user: User) => patchState(store, setUser(user)),
+			clearUser: () => patchState(store, clearUser()),
+		};
+	})
+);
