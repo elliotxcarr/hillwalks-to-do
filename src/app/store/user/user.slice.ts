@@ -6,7 +6,6 @@ export interface UserSlice{
     name: string;
     age: number;
     email: string;
-    walks: Walk[];
     completed_walks: Walk[];
 }
 
@@ -16,6 +15,5 @@ export const initialUserSlice: UserSlice = {
     name: '',
     age: 0,
     email: '',
-    walks: [],
     completed_walks: []
 }
