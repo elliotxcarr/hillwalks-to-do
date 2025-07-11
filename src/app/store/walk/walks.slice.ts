@@ -4,7 +4,8 @@ export interface WalkSlice {
     selectedWalk: Walk | null,
     isLoading: boolean,
     sortOption:string,
-    searchTerm: string
+    searchTerm: string,
+    _walks: Walk[],
 }
 
 export const initialWalkSlice: WalkSlice = {
@@ -12,4 +13,5 @@ export const initialWalkSlice: WalkSlice = {
     isLoading: false,
     sortOption: '',
     searchTerm: '',
+    _walks:[]
 }

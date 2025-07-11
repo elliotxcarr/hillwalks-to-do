@@ -1,29 +1,26 @@
-import { patchState, signalStoreFeature, type } from "@ngrx/signals";
+import { signalStoreFeature, type} from "@ngrx/signals";
 import { withEffects } from "@ngrx/signals/events";
-import { walkConfig, walkEvents } from "./walks.store";
-import { catchError, EMPTY, switchMap, tap } from "rxjs";
-import { setAllEntities } from "@ngrx/signals/entities";
+import { walkEvents} from "./walks.store";
+import { switchMap } from "rxjs";
 import { getInjectableDeps } from "../../injectables";
+import { WalkSlice } from "./walks.slice";
+import { mapResponse } from "@ngrx/operators";
 
 export function withWalkEffects<_>() {
   return signalStoreFeature(
-    type<{}>(),
-    withEffects(store => {
+    type<{state:WalkSlice}>(),
+    withEffects(_ => {
       const inj = getInjectableDeps()
       return {
         fetchWalks$:  inj._events.on(walkEvents.load).pipe(
           switchMap(() => inj._walkService.getAllWalks().pipe(
-            tap((wks) => {
-            patchState(store, setAllEntities(wks, walkConfig))
-            inj._dispatcher.dispatch(walkEvents.loaded(wks))
-          }),
-          catchError((err) => {
-            console.error(err);
-            return EMPTY
-          })
-          )),
-          
-        )
+            mapResponse({
+                next: (wks) =>{
+                  return walkEvents.loaded(wks)
+                },
+                error: console.error,
+            }),
+          )))
       }
     })
   )

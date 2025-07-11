@@ -8,7 +8,7 @@ export function withWalkReducer<_>(){
     type<{state: WalkSlice}>(),
     withReducer(
       on(walkEvents.load, (_) => ({isLoading: true})),
-      on(walkEvents.loaded, (_) => ({ isLoading: false}))
+      on(walkEvents.loaded, (event) => ({_walks: event.payload, isLoading: false}))
     )
   )
 } 
