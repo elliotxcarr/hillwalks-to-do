@@ -3,7 +3,6 @@ import { Walk } from "../../models/Walk";
 import { computed, inject} from "@angular/core";
 import { UserStore } from "../user/user.store";
 import { initialWalkSlice } from "./walks.slice";
-import { clearSelectedWalk, setSelectedWalk, setWalksLoading } from "./walks.updaters";
 import {Dispatcher, eventGroup} from '@ngrx/signals/events';
 import { withWalkEffects } from "./walks.effects";
 import { withWalkReducer } from "./walks.reducer";
@@ -72,9 +71,9 @@ export const WalkStore = signalStore(
   withMethods((store) => ({
     fetchWalks: () => store._dispatcher.dispatch(walkEvents.load()),
     sortWalks: (sortOption: string) => patchState(store, { sortOption }),
-    setSelectedWalk: (walk: Walk) => patchState(store, setSelectedWalk(walk)),
-    clearSelectedWalk: () => patchState(store, clearSelectedWalk()),
+    setSelectedWalk: (walk: Walk) => patchState(store, ({selectedWalk: walk})),
+    clearSelectedWalk: () => patchState(store, ({selectedWalk: null})),
     searchForWalk: (searchTerm: string) => patchState(store, { searchTerm }),
-    setWalksLoading: (isLoading: boolean) => patchState(store, setWalksLoading(isLoading))
+    setWalksLoading: (isLoading: boolean) => patchState(store, ({isLoading}))
   }))
 )

@@ -4,7 +4,6 @@ import { User } from "../../models/User";
 import { Walk } from "../../models/Walk";
 import { WalkService } from "../../services/walk.service";
 import { inject } from "@angular/core";
-import { clearUser, setUser } from "./user.updaters";
 
 export const UserStore = signalStore(
 	{ providedIn: 'root' },
@@ -23,8 +22,8 @@ export const UserStore = signalStore(
 
 		return {
 			saveCompletedWalk,
-			setUser: (user: User) => patchState(store, setUser(user)),
-			clearUser: () => patchState(store, clearUser()),
+			setUser: (user: User) => patchState(store, (user)),
+			clearUser: () => patchState(store, ({})),
 		};
 	})
 );
