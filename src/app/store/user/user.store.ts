@@ -16,14 +16,23 @@ export const UserStore = signalStore(
 			patchState(store, (state) => ({
 				completed_walks: [...state.completed_walks, walk],
 			}));
-
 			store._walkService.saveCompletedWalk(store._id(), walk._id).subscribe();
 		};
+
+		const removeCompletedWalk = (walk:Walk) => {
+			patchState(store, (state) => ({
+				completed_walks: state.completed_walks.filter(w => w._id !== walk._id)
+			}));
+			store._walkService.deleteCompletedWalk(store._id(), walk._id).subscribe();
+		}
+		const handleWalkComplete = ( walk:Walk ) => 
+			!walk.completed ? saveCompletedWalk(walk) : removeCompletedWalk(walk)
 
 		return {
 			saveCompletedWalk,
 			setUser: (user: User) => patchState(store, (user)),
 			clearUser: () => patchState(store, ({})),
+			handleWalkComplete
 		};
 	})
 );

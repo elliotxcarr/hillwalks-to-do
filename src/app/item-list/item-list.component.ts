@@ -8,6 +8,7 @@ import { SpinnerComponent } from '../utils/spinner/spinner.component';
 import { WalkStore } from '../store/walk/walks.store';
 import { SearchBarComponent } from '../utils/search-bar/search-bar.component';
 import { DetailsPanelComponent } from './details-panel/details-panel.component';
+import { UserStore } from '../store/user/user.store';
 
 @Component({
   selector: 'app-item-list',
@@ -26,6 +27,7 @@ import { DetailsPanelComponent } from './details-panel/details-panel.component';
 
 export class ItemListComponent {
   readonly walkStore = inject(WalkStore);
+  readonly userStore = inject(UserStore);
 
   sortOptions: string[] = ['Rating', 'Level', 'Completed', 'Todo'];
 

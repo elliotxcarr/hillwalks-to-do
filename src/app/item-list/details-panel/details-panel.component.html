@@ -28,7 +28,7 @@
                     <h1>{{walk.distance}} &nbsp;miles</h1>
                 </div>
             <div class="flex bg-green-400 hover:bg-green-300 self-center justify-center w-2/5 m-2">
-                    <button id="completed" class="p-1 hover:cursor-pointer text-lg" (click)="userStore.saveCompletedWalk(walk)">
+                    <button id="completed" class="p-1 hover:cursor-pointer text-lg" (click)="userStore.handleWalkComplete(walk)">
                         Completed it!
                     </button>
             </div>
