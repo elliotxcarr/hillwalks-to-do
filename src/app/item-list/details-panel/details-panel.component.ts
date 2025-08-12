@@ -1,5 +1,4 @@
-import { Component, effect,inject, signal} from '@angular/core';
-import { NgIf } from '@angular/common';
+import { Component, effect,inject,signal} from '@angular/core';
 import { FormsModule} from '@angular/forms';
 import { SpinnerComponent } from '../../utils/spinner/spinner.component';
 import { UserStore } from '../../store/user/user.store';
@@ -7,7 +6,7 @@ import { WalkStore } from '../../store/walk/walks.store';
 
 @Component({
   selector: 'app-details-panel',
-  imports: [SpinnerComponent, NgIf, FormsModule],
+  imports: [SpinnerComponent, FormsModule],
   templateUrl: './details-panel.component.html',
   styleUrl: './details-panel.component.css'
 })
@@ -17,16 +16,17 @@ export class DetailsPanelComponent {
 
   imageLoaded = signal(false);
   private selectedImageUrl: string | null = null;
+  walk = this.walkStore.selectedWalk();
 
+  infoLabels = ['Level', 'Duration', 'Bog Factor', 'Distance'];
+  
   constructor(){
     effect(()=>{
-      const walk = this.walkStore.selectedWalk();
+      if(!this.walk) return;
 
-      if(!walk) return;
-
-      if(walk.image !== this.selectedImageUrl){
+      if(this.walk.image !== this.selectedImageUrl){
         this.imageLoaded.set(false);
-        this.selectedImageUrl = walk.image
+        this.selectedImageUrl = this.walk.image
       }
     })
   }
