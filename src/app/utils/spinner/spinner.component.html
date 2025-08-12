@@ -1,4 +1,5 @@
-<div class="flex justify-center align-middle items-center h-full w-full">
-    <div *ngIf="!contentLoaded" class="spinner" >
-    </div>
+<div class="spinner-container">
+    @if (!contentLoaded) {
+        <div class="spinner"></div>
+    }
 </div>

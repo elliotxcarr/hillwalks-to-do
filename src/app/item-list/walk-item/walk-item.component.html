@@ -1,0 +1,26 @@
+<div class="list-item-container"
+    [ngClass]="{'bg-gray-300 hover:bg-gray-200': !walk.completed, 'bg-green-300 hover:bg-green-200' : walk.completed}">
+    <div class="flex w-full justify-between flex-col" (click)="walkStore.setSelectedWalk(walk)">
+        <div class="flex justify-between pb-2">
+            <h1>{{ walk.name }}</h1>
+            <h1>{{ walk.location }}</h1>
+        </div>
+        <div class="flex justify-between items-center">
+            <app-star-rating [rating]="walk.rating"></app-star-rating>
+            <span class="flex items-center">
+                <h2>Level </h2>
+                <h2  [ngClass]="getDifficultyColour(walk.difficulty)">
+                    &nbsp;{{ walk.difficulty }}
+                </h2>
+            </span>
+        </div>
+    </div>
+    <div class="flex ml-5 items-center">
+        <button 
+            [ngClass]="walk.completed ? 'bg-green-700' : ''" (click)="userStore.handleWalkComplete(walk)"
+            class="toggle-complete">
+        </button>
+    </div>
+</div>
+
+

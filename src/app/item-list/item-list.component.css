@@ -1,3 +1,21 @@
+@import 'tailwindcss';
+
 .no-scrollbar::-webkit-scrollbar {
     display: none;
+}
+
+.items-display-container{
+    @apply flex w-full justify-center h-screen bg-gray-400 flex-col items-center
+}
+
+.sort-button{
+    @apply bg-gray-300 p-2 rounded-2xl hover:cursor-pointer hover:bg-gray-200
+}
+
+.list-container{
+    @apply flex flex-col w-full h-screen items-center overflow-auto
+}
+
+.search-bar{
+    @apply flex justify-center w-full p-10
 }

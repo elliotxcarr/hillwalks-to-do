@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+h1{
+  font-weight:600;
+  font-size: 1.5rem;
+}
+
+h2{
+  font-weight:500;
+  font-size: 1.125rem;
+}
+
+.list-item-container{
+  @apply py-2 p-3 rounded-xl my-4 px-8 flex flex-row justify-between cursor-pointer
+}
+
+.toggle-complete{
+  @apply outline-2 w-6 h-6 hover:bg-green-800 hover:cursor-pointer
+}

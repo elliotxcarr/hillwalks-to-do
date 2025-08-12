@@ -9,18 +9,18 @@ import { WalkStore } from '../store/walk/walks.store';
 import { SearchBarComponent } from '../utils/search-bar/search-bar.component';
 import { DetailsPanelComponent } from './details-panel/details-panel.component';
 import { UserStore } from '../store/user/user.store';
+import { WalkItemComponent } from "./walk-item/walk-item.component";
 
 @Component({
   selector: 'app-item-list',
   standalone: true,
   imports: [
     DetailsPanelComponent,
-    StarRatingComponent,
     NgClass,
     SpinnerComponent,
-    NgFor,
     SearchBarComponent,
-  ],
+    WalkItemComponent
+],
   templateUrl: './item-list.component.html',
   styleUrl: './item-list.component.css',
 })
@@ -28,18 +28,5 @@ import { UserStore } from '../store/user/user.store';
 export class ItemListComponent {
   readonly walkStore = inject(WalkStore);
   readonly userStore = inject(UserStore);
-
-  sortOptions: string[] = ['Rating', 'Level', 'Completed', 'Todo'];
-
-  getDifficultyColour(difficulty: number): string {
-    return (
-      {
-        1: 'text-green-700',
-        2: 'text-green-700',
-        3: 'text-orange-700',
-        4: 'text-red-700',
-        5: 'text-red-700',
-      }[difficulty] || ''
-    );
-  }
+  sortOptions: string[] = ['Rating', 'Level', 'Completed', 'Todo'];  
 }
