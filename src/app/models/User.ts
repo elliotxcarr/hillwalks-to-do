@@ -1,7 +1,7 @@
 import { Walk } from "./Walk";
 
 export interface User{
-    _id: string ;
+    id: string ;
     username: string;
     name: string ;
     age: number ;

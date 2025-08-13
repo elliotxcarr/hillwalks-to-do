@@ -23,6 +23,6 @@ export class WalkService {
 
     deleteCompletedWalk(user_id: string, walk_id: string){
         return this.http.delete<Walk>(
-            `http://localhost:5001/users/${user_id}/${walk_id}/completed_walks`)
+            `http://localhost:5001/users/${user_id}/completed_walks`, { params: { walk_id } })
     }
 }

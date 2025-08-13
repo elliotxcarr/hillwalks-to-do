@@ -1,7 +1,7 @@
 import { Walk } from "../../models/Walk";
 
 export interface UserSlice{
-    _id: string;
+    id: string;
     username: string;
     name: string;
     age: number;
@@ -10,7 +10,7 @@ export interface UserSlice{
 }
 
 export const initialUserSlice: UserSlice = {
-    _id: '',
+    id: '',
     username: '',
     name: '',
     age: 0,
