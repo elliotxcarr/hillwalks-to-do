@@ -1,17 +1,19 @@
 import { TestBed } from "@angular/core/testing"
-import { WalkStore } from "./walks.store"
+import { walkEvents, WalkStore } from "./walks.store"
 import { provideHttpClient } from "@angular/common/http";
+import { Dispatcher } from "@ngrx/signals/events";
 
 describe('Walk Store', () => {
   let store: InstanceType<typeof WalkStore>;
-
-
+  const mockDispatcher = {
+    dispatch: jasmine.createSpy('dispatch')
+  };
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [WalkStore, provideHttpClient()]
+      providers: [WalkStore, provideHttpClient(), { provide: Dispatcher, useValue: mockDispatcher }]
     });
 
-    store = TestBed.inject(WalkStore) ;
+    store = TestBed.inject(WalkStore);
   });
 
   it('initialises isLoading as false', () => {
@@ -21,4 +23,10 @@ describe('Walk Store', () => {
   it('initialises selectedWalk as null', () => {
     expect(store.selectedWalk()).toBeNull();
   })
+
+  it('should dispatch load event when fetchWalks is called', () => {
+    store.fetchWalks();
+    expect(mockDispatcher.dispatch).toHaveBeenCalledWith(walkEvents.load());
+  });
+
 })
