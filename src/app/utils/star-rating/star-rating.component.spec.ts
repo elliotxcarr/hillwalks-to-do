@@ -33,7 +33,6 @@ describe('StarRatingComponent', () => {
 
     fixture = TestBed.createComponent(StarRatingComponent);
     component = fixture.componentInstance;
-    component.currentWalk = currentWalk
     fixture.detectChanges();
   });
 
