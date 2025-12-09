@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, beforeEach } from 'vitest';
 import { StarRatingComponent } from './star-rating.component';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -23,5 +23,19 @@ describe('StarRatingComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('displays 5 stars when rating is 5', () => {
+    component.rating = 5;
+    fixture.detectChanges()
+    let text = fixture.nativeElement.querySelector('#star-rating');
+    expect(text.textContent).toEqual(' ★  ★  ★  ★  ★ ')
+  });
+
+  it('displays 2 stars when rating is 2', () => {
+    component.rating = 2;
+    fixture.detectChanges()
+    let text = fixture.nativeElement.querySelector('#star-rating');
+    expect(text.textContent).toEqual(' ★  ★  ☆  ☆  ☆ ')
   });
 });
