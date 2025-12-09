@@ -1,4 +1,4 @@
-import { NgClass, NgFor} from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   Component,
   inject,
