@@ -1,7 +1,7 @@
-<span class="flex flex-row justify-start">
+<span id="star-rating" class="flex flex-row justify-start">
   @for (star of starsArray; track $index) {
-    <span class="text-yellow-700 text-xl">
+    <p  class="text-yellow-700 text-xl">
         {{ $index < rating! ? '★' : '☆' }}
-    </span>
+    </p>
   }
 </span>
