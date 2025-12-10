@@ -2,20 +2,27 @@
     <form (ngSubmit)="onSubmit()" class=" flex flex-col w-1/4 bg-gray-300" autocomplete="off">
         <div class="inputContainer">
             <label for="username" class="text-2xl">Username:</label>
-            <input type="text" (click)="errorMessage=''" id="username" [(ngModel)]="enteredUsername" name="username"
-                data-lpignore="true" required [ngClass]="{'border-2 border-red-500': this.errorMessage }">
+            <input type="text" [field]="loginForm.username" id="username" data-lpignore="true">
+            
         </div>
-
+        @if (loginForm.username().invalid() && loginForm.username().touched()){
+                @for (error of loginForm.username().errors(); track $index) {
+                <div id="errorMessageContainer" class="flex px-4">
+                    <p class="text-lg text-red-500">{{error.message}}</p>
+                </div>
+                }
+            }
         <div class="inputContainer">
             <label for="password" class="text-2xl">Password:</label>
-            <input type="password" (click)="errorMessage=''" id="password" [(ngModel)]="enteredPassword" name="password"
-                data-lpignore="true" required [ngClass]="{'border-2 border-red-500':this.errorMessage }">
+            <input type="password" [field]="loginForm.password" id="password"
+                data-lpignore="true">
         </div>
-        @let error = authStore.error();
-        @if (error) {
-            <div id="errorMessageContainer"  class="flex px-4">
-                <p class="text-lg text-red-500">{{error}}</p>
-            </div>
+        @if (loginForm.password().invalid() && loginForm.password().touched()) {
+            @for (error of loginForm.password().errors(); track $index) {
+                <div id="errorMessageContainer"  class="flex px-4">
+                    <p class="text-lg text-red-500">{{error.message}}</p>
+                </div>
+            }
         }
         <button type="submit" id="button">Login</button>
     </form>
