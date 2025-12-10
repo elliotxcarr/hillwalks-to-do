@@ -1,8 +1,15 @@
 <div class="flex justify-center items-center h-screen w-auto bg-gray-200">
-    <form (ngSubmit)="onSubmit()" class=" flex flex-col w-1/4 bg-gray-300" autocomplete="off">
+    <form (ngSubmit)="onSubmit()" class=" flex flex-col w-1/4 gap-2" autocomplete="off">
         <div class="inputContainer">
-            <label for="username" class="text-2xl">Username:</label>
-            <input type="text" [field]="loginForm.username" id="username" data-lpignore="true">
+            <div class="flex flex-row justify-between">
+                <label for="username" class="text-2xl">Username:</label>
+                <input type="text" [field]="loginForm.username" id="username" data-lpignore="true"/>
+            </div>
+            <div class="flex flex-row justify-between">
+                <label for="password" class="text-2xl">Password:</label>
+                <input type="password" [field]="loginForm.password" id="password"
+                    data-lpignore="true" />
+            </div>
             
         </div>
         @if (loginForm.username().invalid() && loginForm.username().touched()){
@@ -12,11 +19,7 @@
                 </div>
                 }
             }
-        <div class="inputContainer">
-            <label for="password" class="text-2xl">Password:</label>
-            <input type="password" [field]="loginForm.password" id="password"
-                data-lpignore="true">
-        </div>
+        
         @if (loginForm.password().invalid() && loginForm.password().touched()) {
             @for (error of loginForm.password().errors(); track $index) {
                 <div id="errorMessageContainer"  class="flex px-4">
@@ -24,6 +27,9 @@
                 </div>
             }
         }
-        <button type="submit" id="button">Login</button>
+        <button [disabled]="loginForm().invalid()" id="button">Login</button>
+        <label>Dont have an account?
+            <button id="signUp" (click)="router.navigate(['sign-up'])">Sign Up</button>
+        </label>
     </form>
 </div>

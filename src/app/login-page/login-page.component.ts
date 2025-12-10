@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthStore } from '../store/auth/auth.store';
 import { Dispatcher } from '@ngrx/signals/events';
 import { Field, form, required, schema } from '@angular/forms/signals';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -15,7 +16,7 @@ export class LoginPageComponent{
 
   readonly authStore = inject(AuthStore)
   readonly dispatcher: Dispatcher = inject(Dispatcher)
-  
+  readonly router = inject(Router)
   loginModel = signal({
     username: '',
     password: ''

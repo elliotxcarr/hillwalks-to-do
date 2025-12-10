@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+label{
+    @apply text-lg
+    text-gray-700
+}
+
+input{
+  @apply bg-gray-100 flex rounded-sm w-full
+}
+
+#signUp{
+    @apply bg-gray-400 text-white rounded-md px-4 py-2 hover:bg-gray-500 hover:cursor-pointer
+    disabled:bg-gray-200 disabled:cursor-not-allowed
+}
