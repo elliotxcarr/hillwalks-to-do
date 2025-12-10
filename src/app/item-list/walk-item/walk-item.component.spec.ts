@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, beforeEach } from 'vitest';
 import { WalkItemComponent } from './walk-item.component';
 import { provideHttpClient } from '@angular/common/http';
 import { Walk } from '../../models/Walk';

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { describe, it, beforeEach } from 'vitest';
 import { StarRatingComponent } from './star-rating.component';
 import { provideHttpClient } from '@angular/common/http';

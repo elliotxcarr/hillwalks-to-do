@@ -2,11 +2,12 @@ import { TestBed } from "@angular/core/testing"
 import { walkEvents, WalkStore } from "./walks.store"
 import { provideHttpClient } from "@angular/common/http";
 import { Dispatcher } from "@ngrx/signals/events";
-
+import { describe, it, beforeEach, vi } from 'vitest';
 describe('Walk Store', () => {
   let store: InstanceType<typeof WalkStore>;
   const mockDispatcher = {
-    dispatch: jasmine.createSpy('dispatch')
+    
+    dispatch: vi.fn()
   };
   beforeEach(() => {
     TestBed.configureTestingModule({

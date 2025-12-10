@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, beforeEach } from 'vitest';
 import { DetailsPanelComponent } from './details-panel.component';
 import { provideHttpClient } from '@angular/common/http';
 

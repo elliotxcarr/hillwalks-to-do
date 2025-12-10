@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import {provideHttpClient} from '@angular/common/http'
-
+import { describe, it, beforeEach } from 'vitest';
 describe('AuthService', () => {
   let service: AuthService;
 

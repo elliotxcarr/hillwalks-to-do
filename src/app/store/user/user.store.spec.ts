@@ -6,15 +6,20 @@ import { WalkService } from "../../services/walk.service";
 import { patchState } from "@ngrx/signals";
 import {unprotected} from "@ngrx/signals/testing"
 import { of } from "rxjs";
+import { vi } from "vitest";
 
 describe('Walk Store', () => {
   let store: InstanceType<typeof UserStore>;
-  let serviceSpy: jasmine.SpyObj<WalkService>;
+  let serviceSpy: {
+    saveCompletedWalk: ReturnType<typeof vi.fn>,
+    deleteCompletedWalk: ReturnType<typeof vi.fn>
+  }
 
   beforeEach(() => {
-    serviceSpy = jasmine.createSpyObj<WalkService>('WalkService', ['saveCompletedWalk', 'deleteCompletedWalk']);
-    serviceSpy.saveCompletedWalk.and.returnValue(of([] as Walk[]));
-    serviceSpy.deleteCompletedWalk.and.returnValue(of({} as Walk));
+    serviceSpy = {
+      saveCompletedWalk: vi.fn().mockReturnValue(of([] as Walk[])),
+      deleteCompletedWalk: vi.fn().mockReturnValue(of({} as Walk))
+    };
 
     TestBed.configureTestingModule({
       providers: [UserStore, provideHttpClient(), {provide: WalkService, useValue: serviceSpy}]
