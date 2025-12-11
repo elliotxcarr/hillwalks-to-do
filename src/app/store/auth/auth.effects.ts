@@ -33,6 +33,20 @@ export function withAuthEffects<_>() {
               }
             })
           ))
+        ),
+        signupRequest$: inj._events.on(authEvents.signupRequest).pipe(
+          switchMap(({ payload: req }) => inj._authService.signUp(req).pipe(
+            tapResponse({
+              next: _ => {
+                store
+                inj._router.navigate(['login'])
+              },
+              error: (err: HttpErrorResponse) => {
+                const errorMsg = err.error?.error;
+                inj._dispatcher.dispatch(authEvents.signupFailure(errorMsg))
+              }
+            })
+          ))
         )
       }
     })

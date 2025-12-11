@@ -8,13 +8,16 @@ import { Dispatcher, eventGroup} from '@ngrx/signals/events';
 import { User } from '../../models/User';
 import { withAuthEffects } from './auth.effects';
 import { withAuthReducer } from './auth.reducer';
+import { SignUp } from '../../sign-up-page/sign-up-page.component';
 
 export const authEvents = eventGroup({
     source:'Auth',
     events:{
         loginRequest: type<LoginRequest>(),
         loginSuccess: type<User>(),
-        loginFailure: type<string>()
+        loginFailure: type<string>(),
+        signupRequest: type<SignUp>(),
+        signupFailure: type<string>(),
     }
 })
 
